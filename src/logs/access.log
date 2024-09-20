@@ -4,3 +4,7 @@
 ::1 - - [19/Sep/2024:21:49:28 +0000] "POST /v1/api/auth/signup HTTP/1.1" 400 77 "-" "PostmanRuntime/7.42.0"
 ::1 - - [19/Sep/2024:21:49:32 +0000] "POST /v1/api/auth/signup HTTP/1.1" 201 - "-" "PostmanRuntime/7.42.0"
 ::1 - - [19/Sep/2024:21:50:15 +0000] "POST /v1/api/auth/signup HTTP/1.1" 201 - "-" "PostmanRuntime/7.42.0"
+::1 - - [19/Sep/2024:23:19:59 +0000] "POST /v1/api/auth/signup; HTTP/1.1" 500 44 "-" "PostmanRuntime/7.42.0"
+::1 - - [19/Sep/2024:23:20:01 +0000] "POST /v1/api/auth/signup; HTTP/1.1" 500 44 "-" "PostmanRuntime/7.42.0"
+::1 - - [19/Sep/2024:23:20:17 +0000] "POST /v1/api/auth/signup; HTTP/1.1" 500 44 "-" "PostmanRuntime/7.42.0"
+::1 - - [19/Sep/2024:23:20:53 +0000] "POST /v1/api/auth/signup HTTP/1.1" 201 - "-" "PostmanRuntime/7.42.0"
