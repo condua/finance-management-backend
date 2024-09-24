@@ -34,8 +34,8 @@ class FinancialPlanFactory {
     const planClass = FinancialPlanFactory.financialPlanRegistry[type]
     if (!planClass) {
       throw new BadRequestError(`Invalid Plan Type  ${type}`)
-    } 
-    return new planClass(walletId, {...bodyUpdate, type}).updateFinancialPlan(planId)
+    }
+    return new planClass(walletId, { ...bodyUpdate, type }).updateFinancialPlan(planId)
   }
 
   static async deleteFinancialPlan({ walletId, planId, type }) {
@@ -71,16 +71,12 @@ class FinancialPlanFactory {
   }
 
   static async updateRecordById({ walletId, planId, recordId, record }) {
-   
     return await updateRecordInGoal({ planId, recordId, record })
   }
 }
 
 class FinancialPlan {
-  constructor(
-    walletId,
-    { name, description, type, attributes = [], end_date }
-  ) {
+  constructor(walletId, { name, description, type, attributes = [], end_date }) {
     this.name = name
     this.description = description
     this.type = type
@@ -107,7 +103,6 @@ class FinancialPlan {
   }
 
   async updateFinancialPlan({ _id, attributes }) {
-
     try {
       const updated = await updateFinancialPlanById(
         _id,
@@ -179,26 +174,30 @@ class FinancialPlan {
           match: {
             type: type,
           },
-        }).lean()
+        })
+        .lean()
+      if (type === 'goal') return financial_plans
       const ids = financial_plans.map((plan) => plan._id)
-      const budgets = await budgetModel.find({ _id: { $in: ids } }).populate({
-        path: 'categories',
-        model: 'Category',
-      }).populate({
-        path: 'records',
-        model: 'Transaction',
-      })
-     
+      const budgets = await budgetModel
+        .find({ _id: { $in: ids } })
+        .populate({
+          path: 'categories',
+          model: 'Category',
+        })
+        .populate({
+          path: 'records',
+          model: 'Transaction',
+        })
+
       const detailsPlan = financial_plans.map((plan, index) => {
-      
         return {
           ...plan,
           attributes: getInfoData({
             object: budgets[index],
-            fields:  ['target_amount', 'spent_amount', 'start_date','categories', 'records']
-          })
-        }}
-      )
+            fields: ['target_amount', 'spent_amount', 'start_date', 'categories', 'records'],
+          }),
+        }
+      })
       return detailsPlan
     } catch (error) {
       console.log('🚀 ~ FinancialPlan ~ getAllFinancialPlans ~ error:', error)
@@ -248,16 +247,10 @@ class Budget extends FinancialPlan {
         _id: newBudget._id,
         attributes: getInfoData({
           object: newBudget,
-          fields: [
-            'target_amount',
-            'spent_amount',
-            'start_date',
-            'categories',
-            'records',
-          ],
+          fields: ['target_amount', 'spent_amount', 'start_date', 'categories', 'records'],
         }),
       })
-   
+
       return newPlan
     } catch (error) {
       console.log(error)
@@ -266,7 +259,6 @@ class Budget extends FinancialPlan {
   }
 
   async updateFinancialPlan(planId) {
-    
     const foundPlan = await planModel.findOne({ _id: planId })
     if (!foundPlan) {
       throw new BadRequestError('Invalid Plan')
@@ -274,7 +266,7 @@ class Budget extends FinancialPlan {
     const categories = this.attributes?.categories || foundPlan.attributes.categories // if categories is not updated, use the old one
     const start_date = this.attributes?.start_date || foundPlan.attributes.start_date // if start_date is not updated, use the old one
     const end_date = this.end_date || foundPlan.end_date // if due_date is not updated, use the old one
-    
+
     try {
       let records = []
       let spentAmount = 0
@@ -306,7 +298,6 @@ class Budget extends FinancialPlan {
         },
         { new: true }
       )
- 
 
       if (!updatedBudget) {
         throw new InternalServerError('Update Budget error')
@@ -317,13 +308,7 @@ class Budget extends FinancialPlan {
         _id: updatedBudget._id,
         attributes: getInfoData({
           object: updatedBudget,
-          fields: [
-            'target_amount',
-            'spent_amount',
-            'start_date',
-            'categories',
-            'records',
-          ],
+          fields: ['target_amount', 'spent_amount', 'start_date', 'categories', 'records'],
         }),
       })
 

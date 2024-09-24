@@ -1,6 +1,6 @@
 const transactionModel = require('../models/transaction.model')
 const { categoryModel } = require('../models/category.model')
-const { getStartDate, getEndDate } = require('../utils/getDate')
+const { getStartDate, getEndDate, getLastStartDate, getLastEndDate } = require('../utils/getDate')
 const UserServices = require('./user.service')
 const { walletModel } = require('../models/wallet.model')
 const { BadRequestError, InternalServerError } = require('../core/error.response')
@@ -14,7 +14,6 @@ const {
 const { findPlansFilteredByTransaction } = require('../models/repositories/wallet.repo')
 const { getInfoData } = require('../utils')
 
-
 class TransactionService {
   static getAllTransactions = async ({ walletId, options }) => {
     const foundWallet = await walletModel.findOne({ _id: walletId })
@@ -22,19 +21,24 @@ class TransactionService {
       throw new BadRequestError({
         data: {
           walletId: 'Wallet not found',
-        }
+        },
       })
     }
 
-
     try {
+      console.log(options.last)
+      console.log(getStartDate(options.period))
+      console.log(getEndDate(options.period))
+      console.log(getLastStartDate('year'))
+      console.log(getLastEndDate('year'))
+
       const { transactions } = await walletModel.findOne({ _id: walletId }).populate({
         path: 'transactions',
         match: {
           _id: !!options.offset && { $gt: options.offset },
           createdAt: {
-            $gte: getStartDate(options.filter),
-            $lt: getEndDate(options.filter), 
+            $gte: getStartDate(options.period),
+            $lt: getEndDate(options.period),
           },
           type: options.type !== 'all' ? options.type : { $in: ['income', 'expense'] },
         },
@@ -66,7 +70,7 @@ class TransactionService {
       throw new BadRequestError({
         data: {
           transactionId: 'Transaction not found',
-        }
+        },
       })
     }
     try {
@@ -87,13 +91,13 @@ class TransactionService {
 
   static createTransaction = async ({ userId, walletId, transaction }) => {
     const foundWallet = await walletModel.findOne({
-      _id: walletId 
+      _id: walletId,
     })
     if (!foundWallet) {
       throw new BadRequestError({
         data: {
           walletId: 'Wallet not found',
-        }
+        },
       })
     }
     // check valid category
@@ -103,7 +107,7 @@ class TransactionService {
       throw new BadRequestError({
         data: {
           category: 'Category not found',
-        }
+        },
       })
     }
     // const ids = ['a', 'b', 'c', 'd']
@@ -222,10 +226,6 @@ class TransactionService {
           updatedTransaction.createdAt !== foundTransaction.createdAt) &&
         plans.length > 0
       ) {
-        console.log(
-          '🚀 ~ TransactionService ~ const{financial_plans:plans}=awaitwalletModel.findOne ~ plans:',
-          plans
-        )
         plans.forEach(async (plan) => {
           const planCategories = plan.attributes.categories.map((category) => category.toString())
           // remove transaction if category is changed and new category is not in plan categories
@@ -241,20 +241,13 @@ class TransactionService {
               amount: updatedTransaction.amount,
               type: 'delete',
             })
-            console.log(
-              '🚀 Line 195 ~ TransactionService ~ plans.forEach ~ updatedPlan:',
-              updatedPlan
-            )
           }
           // update amount
           const updatedPlan = await updateSpentAmountBudget({
             planId: plan._id,
             amount: -foundTransaction.amount + updatedTransaction.amount,
           })
-          console.log(
-            '🚀 Line 201 ~ TransactionService ~ plans.forEach ~ updatedPlan:',
-            updatedPlan
-          )
+
           // add transaction if category is changed and new category is in plan categories
         })
       }
@@ -346,7 +339,7 @@ class TransactionService {
       throw new InternalServerError('Delete transaction error')
     }
   }
-/// delete all transaction when wallet is deleted -> dont need update budget ?
+  /// delete all transaction when wallet is deleted -> dont need update budget ?
   static deleteAllTransactions = async (transactionIds) => {
     try {
       const deletedTransactions = await transactionModel.deleteMany({
@@ -359,7 +352,7 @@ class TransactionService {
     }
   }
 
-  static scanReceiptImage = async ({ userId, file}) => {
+  static scanReceiptImage = async ({ userId, file }) => {
     const foundUser = await UserServices.findById(userId)
     if (!foundUser) {
       throw new BadRequestError('Invalid user')
@@ -371,7 +364,6 @@ class TransactionService {
       console.error(error)
       throw new InternalServerError('Scan receipt image error')
     }
-    
   }
 }
 

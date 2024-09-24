@@ -15,7 +15,8 @@ class TransactionController {
           limit: req.query.limit ? parseInt(req.query.limit) : 100,
           offset: req.query.offset ? req.query.offset : '',
           sort: req.query.sort ? req.query.sort : 'desc',
-          filter: req.query.filter ? req.query.filter : 'monthly',
+          period: req.query.period ? req.query.period : 'month',
+          last: req.query.last ? req.query.last : 'month',
           type: req.query.type ? req.query.type : 'all',
         },
       }),
@@ -63,21 +64,21 @@ class TransactionController {
     }).send(res)
   }
   scanReceiptImage = async (req, res) => {
-      const { file } = req
-      if (!file) {
-        throw new BadRequestError('File is required')
-      }
-      new SuccessResponse({
-        message: 'Update info success!',
-        metadata: await TransactionService.scanReceiptImage({
-          userId: req.headers[HEADER.CLIENT_ID],
-          file: {
-            path: file.path,
-            fileName: file.filename,
-            folderName: `transactions/${req.headers[HEADER.CLIENT_ID]}`,
-          },
-        }),
-      }).send(res)
+    const { file } = req
+    if (!file) {
+      throw new BadRequestError('File is required')
+    }
+    new SuccessResponse({
+      message: 'Update info success!',
+      metadata: await TransactionService.scanReceiptImage({
+        userId: req.headers[HEADER.CLIENT_ID],
+        file: {
+          path: file.path,
+          fileName: file.filename,
+          folderName: `transactions/${req.headers[HEADER.CLIENT_ID]}`,
+        },
+      }),
+    }).send(res)
   }
 }
 

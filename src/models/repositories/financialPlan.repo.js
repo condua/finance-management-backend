@@ -67,6 +67,7 @@ const updateSpentAmountBudget = async ({ planId, amount }) => {
 const getDetailsPlanById = async (planId) => {
   try {
     const plan = await planModel.findOne({ _id: planId }).lean()
+    if (plan.type === 'goal') return plan
     const attributes = await budgetModel
       .findOne({ _id: planId })
       .populate({
@@ -255,7 +256,6 @@ const deleteAllPlans = async (walletId) => {
 const updatePlansHaveCateogry = async (categoryId) => {
   try {
     const plans = await planModel.find({ 'attributes.categories': categoryId })
-    console.log(plans)
   } catch (error) {
     console.log(error)
   }

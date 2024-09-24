@@ -9,7 +9,7 @@ const { deleteAllTransactionByCategory } = require('../models/repositories/trans
 const transactionModel = require('../models/transaction.model')
 const { budgetModel } = require('../models/financialPlan.model')
 const TransactionService = require('./transaction.service')
-const {walletModel} = require('../models/wallet.model')
+const { walletModel } = require('../models/wallet.model')
 const { updateBudgetWhenCategoryDeleted } = require('../models/repositories/financialPlan.repo')
 
 // create unique category, update unique category
@@ -126,9 +126,16 @@ class CategoryService {
       await userModel.findOneAndUpdate({ _id: userId }, { $pull: { categories: categoryId } })
       const transactions = await transactionModel.find({ category: categoryId }).lean()
       const transactionIds = transactions.map((transaction) => transaction._id)
-      const {_id} = await walletModel.findOne({transactions: {$in: transactionIds}})
+      const foundWallet = await walletModel.findOne({ transactions: { $in: transactionIds } })
+      if (!foundWallet) {
+        return deletedCategory
+      }
       for (let id of transactionIds) {
-        await TransactionService.deleteTransactionById({ userId, walletId: _id, transactionId: id }) // auto update budget 
+        await TransactionService.deleteTransactionById({
+          userId,
+          walletId: foundWallet._id,
+          transactionId: id,
+        }) // auto update budget
       }
       await deleteAllTransactionByCategory(categoryId)
       await updateBudgetWhenCategoryDeleted(categoryId)

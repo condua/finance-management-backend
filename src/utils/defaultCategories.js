@@ -71,7 +71,7 @@ module.exports = [
   },
   {
     icon: 'business',
-    name: 'Business Renenue',
+    name: 'Business Revenue',
     type: 'income',
   },
   {
@@ -98,11 +98,6 @@ module.exports = [
     icon: 'bonuses',
     name: 'Bonuses',
     type: 'income',
-  },
-  {
-    icon: 'royalties',
-    name: 'Netflix',
-    type: 'expense',
   },
   {
     icon: 'gifts',
