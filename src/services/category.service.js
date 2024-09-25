@@ -31,7 +31,7 @@ class CategoryService {
         .lean()
       return categories.map((category) => getInfoData({ object: category, fields: CATEGORY_DATA }))
     } catch (error) {
-      console.log('🚀 ~ CategoryService ~ getAllCategories ~ error:', error)
+      console.error('🚀 ~ CategoryService ~ getAllCategories ~ error:', error)
       throw new InternalServerError('Get all categories error')
     }
   }
@@ -59,7 +59,7 @@ class CategoryService {
         fields: CATEGORY_DATA,
       })
     } catch (error) {
-      console.log('🚀 ~ CategoryService ~ createCategory ~ error:', error)
+      console.error('🚀 ~ CategoryService ~ createCategory ~ error:', error)
       throw new InternalServerError('Create new category error')
     }
   }
@@ -95,7 +95,7 @@ class CategoryService {
         fields: CATEGORY_DATA,
       })
     } catch (error) {
-      console.log('🚀 ~ CategoryService ~ updateCategory ~ error:', error)
+      console.error('🚀 ~ CategoryService ~ updateCategory ~ error:', error)
 
       throw new InternalServerError('Update category error')
     }
@@ -141,7 +141,7 @@ class CategoryService {
       await updateBudgetWhenCategoryDeleted(categoryId)
       return deletedCategory
     } catch (error) {
-      console.log('🚀 ~ CategoryService ~ deleteCategory ~ error:', error)
+      console.error('🚀 ~ CategoryService ~ deleteCategory ~ error:', error)
       throw new InternalServerError('Delete category error')
     }
   }

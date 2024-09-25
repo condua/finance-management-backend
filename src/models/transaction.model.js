@@ -60,6 +60,5 @@ const transactionSchema = new Schema(
     collection: COLLECTION_NAME,
   }
 )
-
 //Export the model
 module.exports = model(DOCUMENT_NAME, transactionSchema)

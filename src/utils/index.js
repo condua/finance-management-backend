@@ -13,6 +13,16 @@ const removeUndefineOrNullObject = (obj) => {
   return obj
 }
 
+const removeUndefinedFields = (obj) => {
+  let updateObj = {}
+  for (let [key, value] of Object.entries(obj)) {
+    if (value !== 'undefined') {
+      updateObj[key] = value
+    }
+  }
+  return updateObj
+}
+
 const updateNestedObjectParser = (obj) => {
   const final = {}
   Object.keys(obj).forEach((key) => {
@@ -35,4 +45,5 @@ module.exports = {
   getInfoData,
   removeUndefineOrNullObject,
   updateNestedObjectParser,
+  removeUndefinedFields,
 }

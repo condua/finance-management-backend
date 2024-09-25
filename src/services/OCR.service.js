@@ -8,7 +8,6 @@ const API_KEY = process.env.VERYFI_API_KEY
 
 let my_client = new Client(CLIENT_ID, CLIENT_SECRET, USERNAME, API_KEY)
 
-
 class OCRService {
   static async processImage(file) {
     const filePath = path.join(__dirname, `../uploads/${file.fileName}`)
@@ -23,7 +22,7 @@ class OCRService {
         total,
       }
     } catch (error) {
-      console.log("🚀 ~ OCRService ~ processImage ~ error:", error)
+      console.error('🚀 ~ OCRService ~ processImage ~ error:', error)
       throw new InternalServerError('Scan receipt error')
     }
   }

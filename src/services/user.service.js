@@ -3,7 +3,7 @@
 const { path } = require('../app')
 const { BadRequestError } = require('../core/error.response')
 const userModel = require('../models/user.model')
-const { getInfoData } = require('../utils')
+const { getInfoData, removeUndefineOrNullObject, removeUndefinedFields } = require('../utils')
 const { uploadImageFromLocal } = require('./upload.service')
 const defaultCategories = require('../utils/defaultCategories')
 const { addMultipleCategories } = require('../models/repositories/category.repo')
@@ -18,20 +18,19 @@ class UserService {
       })
       return newUser
     } catch (error) {
-      console.log('🚀 ~ UserService ~ create= ~ error:', error)
+      console.error('🚀 ~ UserService ~ create= ~ error:', error)
       throw new Error('Create new user error')
     }
   }
 
-  static updateInfo = async ({ userId, user: { name, dob, gender }, file }) => {
+  static updateInfo = async ({ userId, user, file }) => {
     let thumb_url = undefined
     if (file) {
       const { path, fileName, folderName } = file
       thumb_url = await uploadImageFromLocal({ path, fileName, folderName })
     }
-
     const filter = { _id: userId },
-      update = { name, dob, gender, avatar_url: thumb_url },
+      update = { ...removeUndefinedFields(user), avatar_url: thumb_url },
       options = { new: true, update: true }
     return await userModel.findOneAndUpdate(filter, update, options).lean()
   }

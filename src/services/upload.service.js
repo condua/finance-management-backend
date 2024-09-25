@@ -15,7 +15,7 @@ const uploadImageFromUrl = async () => {
       folder: folderName,
       public_id: newFileName,
     })
-    console.log(result)
+    console.error(result)
     return {
       image_url: result.secure_url,
     }
@@ -26,10 +26,8 @@ const uploadImageFromUrl = async () => {
 
 // 2. upload from local image
 
-const uploadImageFromLocal = async ({ path, folderName = 'avatar/userId', fileName}) => {
+const uploadImageFromLocal = async ({ path, folderName = 'avatar/userId', fileName }) => {
   try {
-   
-    
     const result = await cloudinary.uploader.upload(path, {
       folder: folderName,
       public_id: fileName,
@@ -46,7 +44,7 @@ const uploadImageFromLocal = async ({ path, folderName = 'avatar/userId', fileNa
     console.error(`Error uploading image:: ${error}`)
   }
 }
- 
+
 // const removeImages = async () => {
 //   try {
 //     let filePath = path.join(__dirname, `../uploads/`)
@@ -56,11 +54,11 @@ const uploadImageFromLocal = async ({ path, folderName = 'avatar/userId', fileNa
 //       }
 //     })
 //   } catch (error) {
-//     console.log("🚀 ~ removeImages ~ error:", error)
-    
+//     console.error("🚀 ~ removeImages ~ error:", error)
+
 //   }
 // }
 
 module.exports = {
-  uploadImageFromLocal
+  uploadImageFromLocal,
 }

@@ -3,7 +3,7 @@ const userModel = require('../user.model')
 const { walletModel } = require('../wallet.model')
 
 const findPlansFilteredByTransaction = async ({ walletId, transaction }) => {
-  console.log("🚀 ~ findPlansFilteredByTransaction ~ transaction:", transaction)
+  console.error("🚀 ~ findPlansFilteredByTransaction ~ transaction:", transaction)
   try {
     const { financial_plans: plans } = await walletModel.findOne({ _id: walletId }).populate({
       path: 'financial_plans',
@@ -25,7 +25,7 @@ const getAllPlans = async (walletId) => {
   try {
     return await walletModel.findOne({ _id: wallet }).populate('financial_plans').lean()
   } catch (error) {
-    console.log(error)
+    console.error(error)
     throw new InternalServerError('Get all plans error')
   }
 }
@@ -34,7 +34,7 @@ const removeWalletById = async (userId, walletId) => {
     return await userModel.findOneAndUpdate({ _id: userId }, { $pull: { wallets: walletId } })
   }
   catch (error) {
-    console.log(error)
+    console.error(error)
     throw new InternalServerError('Remove wallet error')
   }
 }

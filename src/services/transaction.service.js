@@ -24,19 +24,7 @@ class TransactionService {
         },
       })
     }
-
     try {
-      console.log(options.last)
-      console.log(options.limit)
-      console.log(options.sort)
-      console.log(options.period)
-
-      console.log(getStartDate(options.period))
-
-      console.log(getEndDate(options.period))
-      console.log(getLastStartDate('year'))
-      console.log(getLastEndDate('year'))
-
       const { transactions } = await walletModel.findOne({ _id: walletId }).populate({
         path: 'transactions',
         match: {
@@ -61,10 +49,6 @@ class TransactionService {
           select: '_id name icon type',
         },
       })
-      console.log(
-        '🚀 ~ TransactionService ~ const{transactions}=awaitwalletModel.findOne ~ transactions:',
-        transactions.length
-      )
 
       return transactions.map((transaction) => {
         return getInfoData({
@@ -73,7 +57,7 @@ class TransactionService {
         })
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new InternalServerError('Get all transactions error')
     }
   }
@@ -97,7 +81,7 @@ class TransactionService {
         fields: ['_id', 'amount', 'type', 'category', 'title', 'createdAt'],
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
 
       throw new InternalServerError('Get transaction error')
     }
@@ -124,33 +108,34 @@ class TransactionService {
         },
       })
     }
-    // for (let i = 0; i < 500; i++) {
-    //     const newTransaction = await transactionModel.create({
-    //       ...transaction,
-    //       title: `${transaction.title} ${i}`,
-    //       category: transaction.category,
-    //       amount: Math.round(Math.random() * 1000) * 1000,
-    //       createdAt: new Date(
-    //         new Date(2024, 3, 1).getTime() + 60000 * 50 * i
-    //       ),
-    //     })
-    //     console.log('creating transaction ::' , i)
-    //   await walletModel.findOneAndUpdate(
-    //     { _id: walletId },
-    //     {
-    //       $push: { transactions: newTransaction._id },
-    //       $inc: {
-    //         balance: newTransaction.amount * (newTransaction.type === 'expense' ? -1 : 1),
-    //       },
-    //     },
-    //     { new: true }
-    //   )
-    //   if (i === 499) {
-    //     return  getInfoData({
-    //     object: newTransaction,
-    //     fields: ['_id', 'amount', 'type', 'category', 'title', 'createdAt'],
-    //   })
-    // }
+    /*  for (let i = 0; i < 12; i++) {
+        const newTransaction = await transactionModel.create({
+          ...transaction,
+          title: `${transaction.title} ${i}`,
+          category: transaction.category,
+          amount: Math.round(Math.random() * 1000) * 1000,
+          createdAt: new Date(new Date(transaction.createdAt).getTime() + 60000 *60* i),
+        })
+        console.error('creating transaction ::' , i)
+      await walletModel.findOneAndUpdate(
+        { _id: walletId },
+        {
+          $push: { transactions: newTransaction._id },
+          $inc: {
+            balance: newTransaction.amount * (newTransaction.type === 'expense' ? -1 : 1),
+          },
+        },
+        { new: true }
+      )
+     
+    }
+    return await transactionModel.create({
+      ...transaction,
+      title: `${transaction.title}`,
+      category: transaction.category,
+      amount: Math.round(Math.random() * 1000) * 1000,
+      createdAt: new Date(new Date(transaction.createdAt).getTime() + 60000  * 50),
+    }) */
     // }
     const newTransaction = await transactionModel.create(transaction)
 
@@ -191,7 +176,7 @@ class TransactionService {
       })
     } catch (error) {
       // Rollback
-      console.log(error)
+      console.error(error)
       await transactionModel.deleteOne({ _id: newTransaction._id })
       throw new InternalServerError('Cannot create transaction')
     }
@@ -298,7 +283,7 @@ class TransactionService {
         fields: ['_id', 'amount', 'type', 'category', 'title', 'createdAt'],
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new InternalServerError('Update transaction error')
     }
   }
@@ -357,7 +342,7 @@ class TransactionService {
       }
       return deletedTransaction
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new InternalServerError('Delete transaction error')
     }
   }
@@ -369,7 +354,7 @@ class TransactionService {
       })
       return deletedTransactions
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new InternalServerError('Delete all transactions error')
     }
   }

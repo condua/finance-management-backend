@@ -40,7 +40,7 @@ const removeOrAddRecordsBudget = async ({ planId, transactionId, amount, type = 
       ))
     }
   } catch (error) {
-    console.log(error)
+    error
     throw new InternalServerError('Update financial plan error')
   }
 }
@@ -83,7 +83,7 @@ const getDetailsPlanById = async (planId) => {
       .lean()
     return { ...plan, attributes: { ...attributes } }
   } catch (error) {
-    console.log(error)
+    error
     throw new InternalServerError('Get plan error')
   }
 }
@@ -132,7 +132,7 @@ const addAmountToGoal = async ({ planId, record }) => {
     }
     return updatedGoal
   } catch (error) {
-    console.log('🚀 ~ addAmountToGoal ~ error:', error)
+    '🚀 ~ addAmountToGoal ~ error:', error
     throw new InternalServerError('Add record to Goal error')
   }
 }
@@ -177,7 +177,7 @@ const deleteRecordFromGoal = async ({ planId, recordId }) => {
     }
     return updatedPlan
   } catch (error) {
-    console.log(error)
+    error
     throw new InternalServerError('Delete record from Goal error')
   }
 }
@@ -228,7 +228,7 @@ const updateRecordInGoal = async ({ planId, recordId, record }) => {
       fields: ['_id', 'name', 'type', 'end_date', 'attributes'],
     })
   } catch (error) {
-    console.log(error)
+    error
     throw new InternalServerError('Update record in Goal error')
   }
 }
@@ -248,7 +248,7 @@ const deleteAllPlans = async (walletId) => {
     await budgetModel.deleteMany({ _id: { $in: plans } })
     await goalModel.deleteMany({ _id: { $in: plans } })
   } catch (error) {
-    console.log('🚀 ~ deleteAllPlans ~ error:', error)
+    '🚀 ~ deleteAllPlans ~ error:', error
     throw new InternalServerError('Delete all plans error')
   }
 }
@@ -257,7 +257,7 @@ const updatePlansHaveCateogry = async (categoryId) => {
   try {
     const plans = await planModel.find({ 'attributes.categories': categoryId })
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 
@@ -269,7 +269,7 @@ const updateBudgetWhenCategoryDeleted = async (categoryId) => {
       { $pull: { 'attributes.categories': Types.ObjectId.createFromHexString(categoryId) } }
     )
   } catch (error) {
-    console.log(error)
+    error
   }
 }
 

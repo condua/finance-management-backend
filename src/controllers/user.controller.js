@@ -9,7 +9,6 @@ class UserController {
     const { file } = req
 
     const userId = req.headers['x-client-id']
-    console.log(`userId::`, req.body.name)
     new SuccessResponse({
       message: 'Update info success!',
       metadata: await UserService.updateInfo({

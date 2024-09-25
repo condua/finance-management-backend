@@ -3,7 +3,6 @@ require('dotenv').config();
 // Require the cloudinary library
 const cloudinary = require('cloudinary').v2;
 
-console.log(process.env.CLOUDINARY_CLOUD_NAME);
 // Return "https" URLs by setting secure: true
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

@@ -97,7 +97,7 @@ class FinancialPlan {
         fields: PLAN_FIELDS,
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new InternalServerError('Create Plan error')
     }
   }
@@ -123,7 +123,7 @@ class FinancialPlan {
       await walletModel.findOneAndUpdate({ _id: walletId }, { $pull: { financial_plans: planId } })
       return await planModel.deleteOne({ _id: planId })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new InternalServerError('Delete Plan error')
     }
   }
@@ -151,7 +151,7 @@ class FinancialPlan {
         fields: PLAN_FIELDS,
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new InternalServerError('Get Plan error')
     }
   }
@@ -200,7 +200,7 @@ class FinancialPlan {
       })
       return detailsPlan
     } catch (error) {
-      console.log('🚀 ~ FinancialPlan ~ getAllFinancialPlans ~ error:', error)
+      console.error('🚀 ~ FinancialPlan ~ getAllFinancialPlans ~ error:', error)
       throw new InternalServerError('Get Plans error')
     }
   }
@@ -253,7 +253,7 @@ class Budget extends FinancialPlan {
 
       return newPlan
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new InternalServerError('Create new Budget error')
     }
   }
@@ -318,7 +318,7 @@ class Budget extends FinancialPlan {
       }
       return updatedPlan
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new InternalServerError('Create new Budget error')
     }
   }
@@ -332,7 +332,7 @@ class Budget extends FinancialPlan {
       const deletedPlan = await super.deleteFinancialPlan(walletId, planId)
       return deletedPlan
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new InternalServerError('Delete Budget error 2')
     }
   }
@@ -397,7 +397,7 @@ class Goal extends FinancialPlan {
       }
       return updatedPlan
     } catch (error) {
-      console.log('🚀 ~ Goal ~ updateFinancialPlan ~ error:', error)
+      console.error('🚀 ~ Goal ~ updateFinancialPlan ~ error:', error)
       throw new InternalServerError('Update Goal error')
     }
   }
@@ -411,7 +411,7 @@ class Goal extends FinancialPlan {
       const deletedPlan = await super.deleteFinancialPlan(walletId, planId)
       return deletedPlan
     } catch (error) {
-      console.log(error)
+      console.error(error)
       throw new InternalServerError('Delete Goal error 2')
     }
   }
