@@ -11,6 +11,7 @@ const HEADER = {
 
 class WalletController {
   createWallet = async (req, res, next) => {
+    console.log(req.body)
     new CREATED({
       message: 'Create wallet success!',
       metadata: await WalletService.createWallet({

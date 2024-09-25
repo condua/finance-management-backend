@@ -27,7 +27,12 @@ class TransactionService {
 
     try {
       console.log(options.last)
+      console.log(options.limit)
+      console.log(options.sort)
+      console.log(options.period)
+
       console.log(getStartDate(options.period))
+
       console.log(getEndDate(options.period))
       console.log(getLastStartDate('year'))
       console.log(getLastEndDate('year'))
@@ -36,10 +41,15 @@ class TransactionService {
         path: 'transactions',
         match: {
           _id: !!options.offset && { $gt: options.offset },
-          createdAt: {
-            $gte: getStartDate(options.period),
-            $lt: getEndDate(options.period),
-          },
+          createdAt:
+            options?.period === 'all'
+              ? {
+                  $gte: new Date(0),
+                }
+              : {
+                  $gte: !!options.period ? getStartDate(options.period) : undefined,
+                  $lt: !!options.period ? getEndDate(options.period) : undefined,
+                },
           type: options.type !== 'all' ? options.type : { $in: ['income', 'expense'] },
         },
         options: {
@@ -51,6 +61,10 @@ class TransactionService {
           select: '_id name icon type',
         },
       })
+      console.log(
+        '🚀 ~ TransactionService ~ const{transactions}=awaitwalletModel.findOne ~ transactions:',
+        transactions.length
+      )
 
       return transactions.map((transaction) => {
         return getInfoData({
@@ -110,17 +124,17 @@ class TransactionService {
         },
       })
     }
-    // const ids = ['a', 'b', 'c', 'd']
-    const newTransaction = await transactionModel.create(transaction)
-    // for (let i = 0; i < 1000; i++) {
+    // for (let i = 0; i < 500; i++) {
     //     const newTransaction = await transactionModel.create({
     //       ...transaction,
-    //       title: `Transaction ${i}`,
-    //       category: `66eb6993f527ca166c20d7f${ids[i%4]}`,
-    //       amount: Math.round(Math.random() * 1000)*1000,
-    //       createdAt: new Date(new Date(2024, 0, 1).getTime() + 60000 * 60 * 2 * i),
+    //       title: `${transaction.title} ${i}`,
+    //       category: transaction.category,
+    //       amount: Math.round(Math.random() * 1000) * 1000,
+    //       createdAt: new Date(
+    //         new Date(2024, 3, 1).getTime() + 60000 * 50 * i
+    //       ),
     //     })
-
+    //     console.log('creating transaction ::' , i)
     //   await walletModel.findOneAndUpdate(
     //     { _id: walletId },
     //     {
@@ -131,7 +145,15 @@ class TransactionService {
     //     },
     //     { new: true }
     //   )
+    //   if (i === 499) {
+    //     return  getInfoData({
+    //     object: newTransaction,
+    //     fields: ['_id', 'amount', 'type', 'category', 'title', 'createdAt'],
+    //   })
     // }
+    // }
+    const newTransaction = await transactionModel.create(transaction)
+
     if (!newTransaction) {
       throw new BadRequestError('Cannot create transaction')
     }

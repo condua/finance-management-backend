@@ -6,18 +6,27 @@ const { BadRequestError } = require('../core/error.response')
 
 class UserController {
   updateInfo = async (req, res, next) => {
-    const {file } = req
-    if (!file) {
-      throw new BadRequestError('File is required')
-    }
-    const { userId } = req.params
+    const { file } = req
+
+    const userId = req.headers['x-client-id']
+    console.log(`userId::`, req.body.name)
     new SuccessResponse({
       message: 'Update info success!',
-      metadata: await UserService.updateInfo({userId, user: req.body, file: {
-        path: file.path,
-        fileName: file.filename,
-        folderName: `avatar/${userId}`
-      }}),
+      metadata: await UserService.updateInfo({
+        userId,
+        user: {
+          name: req.body?.name,
+          dob: req.body?.dob,
+          gender: req.body?.gender,
+        },
+        file: file
+          ? {
+              path: file.path,
+              fileName: file.filename,
+              folderName: `avatar/${userId}`,
+            }
+          : null,
+      }),
     }).send(res)
   }
   getInfo = async (req, res, next) => {

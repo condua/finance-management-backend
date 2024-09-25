@@ -8,7 +8,6 @@ const { uploadImageFromLocal } = require('./upload.service')
 const defaultCategories = require('../utils/defaultCategories')
 const { addMultipleCategories } = require('../models/repositories/category.repo')
 
-
 class UserService {
   static create = async (user) => {
     try {
@@ -24,12 +23,13 @@ class UserService {
     }
   }
 
-  static updateInfo = async ({
-    userId,
-    user: { name, dob, gender },
-    file: { path, fileName, folderName },
-  }) => {
-    const { thumb_url } = await uploadImageFromLocal({ path, fileName, folderName })
+  static updateInfo = async ({ userId, user: { name, dob, gender }, file }) => {
+    let thumb_url = undefined
+    if (file) {
+      const { path, fileName, folderName } = file
+      thumb_url = await uploadImageFromLocal({ path, fileName, folderName })
+    }
+
     const filter = { _id: userId },
       update = { name, dob, gender, avatar_url: thumb_url },
       options = { new: true, update: true }

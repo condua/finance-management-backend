@@ -12,11 +12,11 @@ class TransactionController {
       metadata: await TransactionService.getAllTransactions({
         walletId: walletId,
         options: {
-          limit: req.query.limit ? parseInt(req.query.limit) : 100,
+          limit: Number(req.query.limit) || 0,
           offset: req.query.offset ? req.query.offset : '',
           sort: req.query.sort ? req.query.sort : 'desc',
-          period: req.query.period ? req.query.period : 'month',
-          last: req.query.last ? req.query.last : 'month',
+          period: req.query.period,
+          last: req.query.last ,
           type: req.query.type ? req.query.type : 'all',
         },
       }),

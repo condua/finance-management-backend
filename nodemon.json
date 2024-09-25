@@ -1,7 +1,7 @@
 {
   "env": {
     "PORT": "5000",
-    "NODE_ENV": "pro",
+    "NODE_ENV": "dev",
     "DEV_APP_PORT": "3055",
     "DEV_DB_HOST": "localhost",
     "DEV_DB_PORT": "27017",

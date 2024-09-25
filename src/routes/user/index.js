@@ -11,7 +11,7 @@ const router = express.Router()
 router.use(authentication)
 
 // update info
-router.post('/:userId', uploadDisk.single('file'), asyncHandler(userController.updateInfo))
+router.patch('/', uploadDisk.single('file'), asyncHandler(userController.updateInfo))
 router.get('/', asyncHandler(userController.getInfo))
 
 module.exports = router
