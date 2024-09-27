@@ -24,32 +24,39 @@ class TransactionService {
         },
       })
     }
+    const createdAt =
+      options?.period === 'all'
+        ? {
+            $gte: new Date(0),
+          }
+        : {
+            $gte: !!options.period ? getStartDate(options.period) : undefined,
+            $lt: !!options.period ? getEndDate(options.period) : undefined,
+          }
+    const offset = !!options.offset && { $gt: options.offset }
+    const type = options.type !== 'all' ? options.type : { $in: ['income', 'expense'] }
+    const limit = options.limit || 0
+    const sort = { createdAt: options.sort === 'desc' ? -1 : 1 }
+    const category = options.category !== 'all' ? { $in: options.category.split(',') } : { $exists: true }
     try {
       const { transactions } = await walletModel.findOne({ _id: walletId }).populate({
         path: 'transactions',
         match: {
-          _id: !!options.offset && { $gt: options.offset },
-          createdAt:
-            options?.period === 'all'
-              ? {
-                  $gte: new Date(0),
-                }
-              : {
-                  $gte: !!options.period ? getStartDate(options.period) : undefined,
-                  $lt: !!options.period ? getEndDate(options.period) : undefined,
-                },
-          type: options.type !== 'all' ? options.type : { $in: ['income', 'expense'] },
+          _id: offset,
+          createdAt,
+          type,
+          category,
         },
         options: {
-          limit: options.limit,
-          sort: { createdAt: options.sort === 'desc' ? -1 : 1 },
+          limit,
+          sort,
         },
         populate: {
           path: 'category',
           select: '_id name icon type',
         },
       })
-
+      console.log(transactions)
       return transactions.map((transaction) => {
         return getInfoData({
           object: transaction,

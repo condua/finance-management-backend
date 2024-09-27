@@ -18,6 +18,7 @@ class TransactionController {
           period: req.query.period,
           last: req.query.last ,
           type: req.query.type ? req.query.type : 'all',
+          category: req.query.category ? req.query.category : 'all',
         },
       }),
     }).send(res)
