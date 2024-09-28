@@ -17,7 +17,6 @@ class OCRService {
       return {
         img_url,
         title: category,
-        currency_code,
         createdAt: new Date(date).toISOString(),
         total,
       }
