@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const { budgetModel, goalModel, planModel } = require('../financialPlan.model')
-const { walletModel } = require('../wallet.model')
+const walletModel = require('../wallet.model')
 const { InternalServerError, BadRequestError } = require('../../core/error.response')
 const { updateNestedObjectParser, getInfoData } = require('../../utils')
 const { Types } = require('mongoose')

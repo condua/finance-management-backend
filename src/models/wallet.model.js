@@ -21,7 +21,7 @@ const walletSchema = new Schema(
       enum: ['private', 'shared'],
       required: true,
     },
-    image_url: {
+    icon: {
       type: String,
       // default: 'https://res.cloudinary.com/dybygufkr/image/upload/v1623925926/avatars/default-avatar.png',
     },
@@ -44,9 +44,6 @@ const walletSchema = new Schema(
       },
     ],
 
-    // walletOptions: {
-    //   type: Schema.Types.Mixed,
-    // },
   },
   {
     timestamps: true,
@@ -54,50 +51,7 @@ const walletSchema = new Schema(
   }
 )
 
-// const individualWalletSchema = new Schema({
-//   transactions : [{
-//     type: Schema.Types.ObjectId,
-//     ref: 'Transaction'
-//   }],
-//   goals: [{
-//     type: Schema.Types.ObjectId,
-//     ref: 'Goal'
-//   }],
-//   budgets: [{
-//     type: Schema.Types.ObjectId,
-//     ref: 'Budget'
-//   }]
-// },{
-//   timestamps: true,
-//   collection: 'individual'
-// })
-
-
-// const groupWalletSchema = new Schema({
-  
-//   members: [{
-//     user: {
-//       type: Schema.Types.ObjectId,
-//       ref: 'User'
-//     },
-//     role: {
-//       type: String,
-//       enum: ['owner', 'member'],
-//       required: true
-//     },
-//     _id: false
-//   }],
-
-// },{
-//   timestamps: true,
-//   collection: 'group'
-// })
-
 
 
 //Export the model
-module.exports = {
-  walletModel: model(DOCUMENT_NAME, walletSchema),
-  // individualWalletModel: model('IndividualWallet', individualWalletSchema),
-  // groupWalletModel: model('GroupWallet', groupWalletSchema),
-}
+module.exports = model(DOCUMENT_NAME, walletSchema)

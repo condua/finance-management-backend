@@ -1,6 +1,6 @@
 const { InternalServerError } = require("../../core/error.response")
 const transactionModel = require("../transaction.model")
-const {walletModel} = require("../wallet.model")
+const walletModel = require("../wallet.model")
 
 const deleteAllTransactions = async (walletId) => {
   try {

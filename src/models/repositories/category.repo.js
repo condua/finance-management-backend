@@ -1,5 +1,5 @@
 const { InternalServerError } = require('../../core/error.response')
-const { categoryModel } = require('../category.model')
+const  categoryModel= require('../category.model')
 
 const addMultipleCategories = async (categories) => {
   try {

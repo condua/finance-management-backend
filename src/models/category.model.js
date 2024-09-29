@@ -3,28 +3,6 @@ const { model, Schema, Types, default: mongoose } = require('mongoose')
 const DOCUMENT_NAME = 'Category'
 const COLLECTION_NAME = 'categories'
 
-
-const subcategorySchema = new Schema(
-  {
-    icon: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    belong_to: {
-      type: Types.ObjectId,
-      ref: 'Category',
-    },
-  },
-  {
-    timestamps: true,
-    collection: 'subcategories',
-  }
-)
-
 const categorySchema = new Schema(
   {
     icon: {
@@ -51,7 +29,4 @@ const categorySchema = new Schema(
   }
 )
 
-module.exports = {
-  categoryModel: model(DOCUMENT_NAME, categorySchema),
-  // subCategoryModel: model('SubCategory', subcategorySchema),
-}
+module.exports = model(DOCUMENT_NAME, categorySchema)

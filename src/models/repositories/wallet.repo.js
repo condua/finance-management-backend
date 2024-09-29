@@ -1,9 +1,8 @@
 const { InternalServerError } = require('../../core/error.response')
 const userModel = require('../user.model')
-const { walletModel } = require('../wallet.model')
+const walletModel= require('../wallet.model')
 
 const findPlansFilteredByTransaction = async ({ walletId, transaction }) => {
-  console.error("🚀 ~ findPlansFilteredByTransaction ~ transaction:", transaction)
   try {
     const { financial_plans: plans } = await walletModel.findOne({ _id: walletId }).populate({
       path: 'financial_plans',
