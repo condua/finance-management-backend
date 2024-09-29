@@ -1,8 +1,8 @@
 const { planModel, budgetModel, goalModel } = require('../models/financialPlan.model')
 const { BadRequestError, InternalServerError } = require('../core/error.response')
 const { startSession } = require('mongoose')
-const { subCategoryModel, categoryModel } = require('../models/category.model')
-const { walletModel } = require('../models/wallet.model')
+const categoryModel = require('../models/category.model')
+const walletModel = require('../models/wallet.model')
 const { getInfoData, updateNestedObjectParser, removeUndefineOrNullObject } = require('../utils')
 const {
   updateFinancialPlanById,
@@ -12,6 +12,7 @@ const {
   addAmountToGoal,
   updateRecordInGoal,
 } = require('../models/repositories/financialPlan.repo')
+const userModel = require('../models/user.model')
 
 const PLAN_FIELDS = ['_id', 'name', 'description', 'type', 'attributes', 'end_date']
 
@@ -210,10 +211,27 @@ class FinancialPlan {
 
 class Budget extends FinancialPlan {
   async createFinancialPlan() {
+    if (new Date(this.end_date) < new Date(this.attributes.start_date)) {
+      throw new BadRequestError({
+        data: {
+          end_date: 'End date must be greater than start date',
+        },
+      })
+    }
+
     try {
       const { categories, start_date } = this.attributes
+      const foundUser = await userModel.findOne({ categories: { $in: categories } }).lean()
+      if (!foundUser) {
+        throw new BadRequestError({
+          data: {
+            categories: 'Invalid categories',
+          },
+        })
+      }
       let records = []
       let spentAmount = 0
+
       // filter records by categories
       for (const category of categories) {
         const { transactions } = await walletModel.findOne({ _id: this.walletId }).populate({
@@ -261,12 +279,23 @@ class Budget extends FinancialPlan {
   async updateFinancialPlan(planId) {
     const foundPlan = await planModel.findOne({ _id: planId })
     if (!foundPlan) {
-      throw new BadRequestError('Invalid Plan')
+      throw new BadRequestError({
+        data: {
+          planId: 'Invalid Plan',
+        },
+      })
     }
     const categories = this.attributes?.categories || foundPlan.attributes.categories // if categories is not updated, use the old one
     const start_date = this.attributes?.start_date || foundPlan.attributes.start_date // if start_date is not updated, use the old one
     const end_date = this.end_date || foundPlan.end_date // if due_date is not updated, use the old one
-
+    const foundUser = await userModel.findOne({ categories: { $in: categories } }).lean()
+    if (!foundUser) {
+      throw new BadRequestError({
+        data: {
+          categories: 'Invalid categories',
+        },
+      })
+    }
     try {
       let records = []
       let spentAmount = 0

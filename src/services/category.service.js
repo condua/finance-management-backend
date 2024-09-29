@@ -1,4 +1,4 @@
-const { categoryModel, subCategoryModel } = require('../models/category.model')
+const categoryModel = require('../models/category.model')
 const { InternalServerError, NotFoundError, BadRequestError } = require('../core/error.response')
 const UserService = require('./user.service')
 const { getInfoData } = require('../utils')
@@ -9,7 +9,7 @@ const { deleteAllTransactionByCategory } = require('../models/repositories/trans
 const transactionModel = require('../models/transaction.model')
 const { budgetModel } = require('../models/financialPlan.model')
 const TransactionService = require('./transaction.service')
-const { walletModel } = require('../models/wallet.model')
+const walletModel = require('../models/wallet.model')
 const { updateBudgetWhenCategoryDeleted } = require('../models/repositories/financialPlan.repo')
 
 // create unique category, update unique category

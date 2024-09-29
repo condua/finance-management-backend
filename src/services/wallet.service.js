@@ -1,5 +1,5 @@
 'use strict'
-const { walletModel, individualWalletModel, groupWalletModel } = require('../models/wallet.model')
+const  walletModel = require('../models/wallet.model')
 const UserServices = require('./user.service')
 const { BadRequestError, InternalServerError } = require('../core/error.response')
 const userModel = require('../models/user.model')
