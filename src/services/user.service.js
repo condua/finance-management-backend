@@ -1,5 +1,4 @@
 'use strict'
-
 const { path } = require('../app')
 const { BadRequestError } = require('../core/error.response')
 const userModel = require('../models/user.model')
@@ -29,6 +28,16 @@ class UserService {
       const { path, fileName, folderName } = file
       thumb_url = await uploadImageFromLocal({ path, fileName, folderName })
     }
+    const {dob} = removeUndefinedFields(user)
+    if (dob && new Date(dob) > new Date()) {
+      throw new BadRequestError({
+        data: {
+          dob: 'Date of birth must be less than current date',
+        },
+      })
+      
+    }
+
     const filter = { _id: userId },
       update = { ...removeUndefinedFields(user), avatar_url: thumb_url },
       options = { new: true, update: true }
