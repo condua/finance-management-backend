@@ -7,6 +7,7 @@ const {
 const connectString =
   process.env.MONGO_URI || `mongodb://${host}:${port}/${name}`
 const { countConnection } = require('../helpers/check.connect')
+console.log('Connecting mongodb with uri::', connectString)
 class Database {
   constructor() {
     this.connect()
@@ -22,7 +23,7 @@ class Database {
       .connect(connectString)
       .then((_) => {
         console.log(`Connected Mongodb Success`)
-        countConnection()
+        // countConnection()
       })
       .catch((err) => console.log(`Error Connect!`))
   }

@@ -33,13 +33,6 @@ app.use((req, res, next) => {
 
 app.use((error, req, res, next) => {
   const statusCode = error.status || 500
-  /*  statuscode = 500, message = 'Internal Server Error' 
-      else status code = 4xx, error : {
-        [field]: message
-        
-      }
-  */ 
-  console.error(error.stack)
 
   if (error.status === 400 ) {
     return res.status(statusCode).json({

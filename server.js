@@ -1,6 +1,8 @@
 const app = require('./src/app')
-
-const PORT = process.env.PORT || 3055
+const {
+  app: { port },
+} = require('./src/configs/mongodb.config')
+const PORT = port || 5000
 
 const server = app.listen(PORT, () => {
   console.log(`Server start with port ${PORT}`)
@@ -9,3 +11,6 @@ const server = app.listen(PORT, () => {
 process.on('SIGINT', () => {
   server.close(() => console.log(`Exit server express`))
 })
+
+
+module.exports = server
