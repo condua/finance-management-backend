@@ -1,5 +1,6 @@
 const Client = require('@veryfi/veryfi-sdk')
 const path = require('path')
+const { InternalServerError } = require('../core/error.response')
 
 const CLIENT_ID = process.env.VERYFI_CLIENT_ID
 const CLIENT_SECRET = process.env.VERYFI_CLIENT_SECRET

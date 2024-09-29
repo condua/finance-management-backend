@@ -45,7 +45,7 @@ class TransactionController {
   }
   updateTransaction = async (req, res) => {
     new SuccessResponse({
-      message: 'Update wallet success!',
+      message: 'Update transaction success!',
       metadata: await TransactionService.updateTransaction({
         walletId: req.params.walletId,
         transactionId: req.params.transactionId,
@@ -56,7 +56,7 @@ class TransactionController {
   }
   deleteTransactionById = async (req, res) => {
     new SuccessResponse({
-      message: 'Delete wallet success!',
+      message: 'Delete transaction success!',
       metadata: await TransactionService.deleteTransactionById({
         userId: req.headers[HEADER.CLIENT_ID],
         walletId: req.params.walletId,
@@ -67,10 +67,14 @@ class TransactionController {
   scanReceiptImage = async (req, res) => {
     const { file } = req
     if (!file) {
-      throw new BadRequestError('File is required')
+      throw new BadRequestError({
+        data: {
+          file: 'File is required!',
+        },
+      })
     }
     new SuccessResponse({
-      message: 'Update info success!',
+      message: 'Extract receipt image success!',
       metadata: await TransactionService.scanReceiptImage({
         userId: req.headers[HEADER.CLIENT_ID],
         file: {

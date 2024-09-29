@@ -1,8 +1,8 @@
 const transactionModel = require('../models/transaction.model')
-const { categoryModel } = require('../models/category.model')
+const categoryModel = require('../models/category.model')
 const { getStartDate, getEndDate, getLastStartDate, getLastEndDate } = require('../utils/getDate')
 const UserServices = require('./user.service')
-const { walletModel } = require('../models/wallet.model')
+const walletModel= require('../models/wallet.model')
 const { BadRequestError, InternalServerError } = require('../core/error.response')
 const { planModel, budgetModel } = require('../models/financialPlan.model')
 const OCRService = require('./OCR.service')
@@ -56,7 +56,6 @@ class TransactionService {
           select: '_id name icon type',
         },
       })
-      console.log(transactions)
       return transactions.map((transaction) => {
         return getInfoData({
           object: transaction,
@@ -198,7 +197,11 @@ class TransactionService {
     if (update.category) {
       const foundCategory = await categoryModel.findOne({ _id: update.category._id }).lean()
       if (!foundCategory) {
-        throw new BadRequestError('Category not found')
+        throw new BadRequestError({
+          data: {
+            category: 'Category not found',
+          }
+        })
       }
     }
 
