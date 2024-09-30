@@ -95,6 +95,38 @@ describe('Wallet API: Các API tiền tố /wallets ở trước', () => {
       })
   })
 
+  it('GET / Get all wallets', (done) => {
+    chai
+      .request(app)
+      .get(`/v1/api/wallets`)
+      .set('Authorization', `${auth.tokens.accessToken}`)
+      .set('x-client-id', `${auth.user._id}`)
+      .end((err, res) => {
+        res.should.have.status(200)
+        res.body.should.be.a('object')
+        res.body.should.have.property('metadata')
+        const transactions = res.body.metadata
+        expect(transactions).to.be.a('array')
+        done()
+      })
+  })
+
+  it('GET /{walletId} Get a wallet by id', (done) => {
+    chai
+      .request(app)
+      .get(`/v1/api/wallets/${walletId}`)
+      .set('Authorization', `${auth.tokens.accessToken}`)
+      .set('x-client-id', `${auth.user._id}`)
+      .end((err, res) => {
+        res.should.have.status(200)
+        res.body.should.be.a('object')
+        res.body.should.have.property('metadata')
+        const wallet = res.body.metadata
+        expect(wallet).to.be.a('object')
+        done()
+      })
+  })
+
   it('PATCH /{walletId} Update a wallet success', (done) => {
     chai
       .request(app)

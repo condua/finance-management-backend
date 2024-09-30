@@ -6,8 +6,6 @@ const app = require('../src/app')
 
 chai.use(chaiHttp)
 
-
-
 let auth
 
 describe('User API: Các API tiền tố /users ở trước', () => {
@@ -22,7 +20,7 @@ describe('User API: Các API tiền tố /users ở trước', () => {
         .post('/v1/api/auth/signup')
         .send(body)
         .end((err, res) => {
-          if (err)  {
+          if (err) {
             console.log('error')
             reject(err)
           }
@@ -57,7 +55,7 @@ describe('User API: Các API tiền tố /users ở trước', () => {
       .patch('/v1/api/users')
       .send({
         dob: '1999-01-01',
-        name: 'Luu Tranh'
+        name: 'Luu Tranh',
       })
       .set('Authorization', `${auth.tokens.accessToken}`)
       .set('x-client-id', `${auth.user._id}`)
@@ -85,12 +83,10 @@ describe('User API: Các API tiền tố /users ở trước', () => {
         res.should.have.status(400)
         res.body.should.be.a('object')
         res.body.should.have.property('error')
-        const {dob: errorMsg} = res.body.error
+        const { dob: errorMsg } = res.body.error
         expect(errorMsg).to.be.a('string')
         expect(errorMsg).to.equal('Date of birth must be less than current date')
         done()
       })
   })
-
-
 })
