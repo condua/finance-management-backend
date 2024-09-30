@@ -79,6 +79,13 @@ class UserService {
 
   static getInfo = async (userId) => {
     const user = await userModel.findById(userId)
+    if (!user) {
+      throw new BadRequestError({
+        data: {
+          userId: 'User not found',
+        }
+      })
+    }
     return getInfoData({
       object: user,
       fields: ['_id', 'name', 'email', 'avatar_url', 'gender', 'dob'],

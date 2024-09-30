@@ -13,6 +13,7 @@ class AccessController {
    * @returns {Object} - A JSON response
    */
   handlerRefreshToken = async (req, res, next) => {
+
     new SuccessResponse({
       message: 'Get token success!',
       metadata: await AccessService.handlerRefreshToken({
