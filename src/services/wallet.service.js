@@ -37,7 +37,6 @@ const createWallet = async ({ userId, wallet }) => {
     path: 'wallets',
     match: { name: wallet.name },
   })
-
   if (wallets.length !== 0) {
     throw new BadRequestError({
       data: {
@@ -142,8 +141,12 @@ const updateWallet = async ({ userId, walletId, wallet }) => {
       },
     })
   }
-  const isNameExist = await walletModel.findOne({ name: wallet.name, _id: { $ne: walletId } })
-  if (isNameExist) {
+  const {wallets} = await userModel.findOne({ _id: userId }).populate({
+    path: 'wallets',
+    match: {
+      name: wallet.name
+    }})
+  if (wallets.length !== 0) {
     throw new BadRequestError({
       data: {
         name: 'Wallet name already exists',
