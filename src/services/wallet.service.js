@@ -141,12 +141,12 @@ const updateWallet = async ({ userId, walletId, wallet }) => {
       },
     })
   }
-  const {wallets} = await userModel.findOne({ _id: userId }).populate({
+  const {wallets} = await userModel.findOne({ _id: userId}).populate({
     path: 'wallets',
     match: {
       name: wallet.name
     }})
-  if (wallets.length !== 0) {
+  if (wallets.length !== 0 && wallets[0]._id !== walletId) {
     throw new BadRequestError({
       data: {
         name: 'Wallet name already exists',
@@ -156,13 +156,14 @@ const updateWallet = async ({ userId, walletId, wallet }) => {
   try {
     const updateWallet = {
       name: wallet?.name,
+      icon: wallet?.icon,
     }
     const updatedWallet = await walletModel.findOneAndUpdate({ _id: walletId }, updateWallet, {
       new: true,
     })
     return getInfoData({
       object: updatedWallet,
-      fields: ['_id', 'name', 'balance', 'type', 'transactions', 'financial_plans', 'debts'],
+      fields: ['_id', 'name', 'icon', 'balance', 'type', 'transactions', 'financial_plans', 'debts'],
     })
   } catch (error) {
     throw new InternalServerError('Cannot update wallet')
