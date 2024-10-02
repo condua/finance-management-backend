@@ -145,8 +145,8 @@ const updateWallet = async ({ userId, walletId, wallet }) => {
     path: 'wallets',
     match: {
       name: wallet.name
-    }})
-  if (wallets.length !== 0 && wallets[0]._id !== walletId) {
+    }}).lean()
+  if (wallets.length !== 0 && wallets[0]._id != walletId) {
     throw new BadRequestError({
       data: {
         name: 'Wallet name already exists',
