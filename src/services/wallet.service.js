@@ -93,7 +93,7 @@ const getWalletById = async (userId, walletId) => {
   try {
     return getInfoData({
       object: foundWallet,
-      fields: ['_id', 'name', 'balance', 'type', 'transactions', 'financial_plans', 'debts'],
+      fields: ['_id', 'name','icon', 'balance', 'type', 'transactions', 'financial_plans', 'debts'],
     })
   } catch (error) {
     console.error('🚀 ~ getWalletById ~ error:', error)
