@@ -23,7 +23,6 @@ const walletSchema = new Schema(
     },
     icon: {
       type: String,
-      // default: 'https://res.cloudinary.com/dybygufkr/image/upload/v1623925926/avatars/default-avatar.png',
     },
     transactions: [
       {

@@ -53,7 +53,7 @@ const createWallet = async ({ userId, wallet }) => {
     await UserServices.addWalletById(userId, newWallet._id)
     return getInfoData({
       object: newWallet,
-      fields: ['_id', 'name', 'balance', 'type', 'transactions', 'financial_plans', 'debts'],
+      fields: ['_id', 'icon', 'name', 'balance', 'type', 'transactions', 'financial_plans', 'debts'],
     })
   } catch (error) {
     console.error(error)
