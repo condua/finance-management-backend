@@ -31,8 +31,8 @@ class TransactionService {
           }
         : options?.period === 'custom'
         ? {
-            $gte: !!options.startDate ? getStartDate(options.startDate) : undefined,
-            $lt: !!options.endDate ? getEndDate(options.endDate) : undefined,
+            $gte: !!options.startDate ? getStartDate(options.startDate) : getStartDate(new Date()),
+            $lt: !!options.endDate ? getEndDate(options.endDate) : getEndDate(new Date()),
           }
         : {
             $gte: !!options.period ? getStartDate(options.period) : undefined,
