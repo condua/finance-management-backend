@@ -36,7 +36,7 @@ const getStartDate = (type) => {
     case 'year':
       return startOfYear(new Date())
     default:
-      return startOfDay(new Date())
+      return startOfDay(new Date(type))
   }
 }
 
@@ -53,7 +53,7 @@ const getEndDate = (type) => {
     case 'year':
       return endOfWeek(new Date())
     default:
-      return endOfDay(new Date())
+      return endOfDay(new Date(type))
   }
 }
 
