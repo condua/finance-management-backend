@@ -42,6 +42,7 @@ class TransactionService {
     const type = options.type !== 'all' ? options.type : { $in: ['income', 'expense'] }
     const limit = options.limit || 0
     const sort = { createdAt: options.sort === 'desc' ? -1 : 1 }
+    console.log(createdAt)
     const category = options.category !== 'all' ? { $in: options.category.split(',') } : { $exists: true }
     try {
       const { transactions } = await walletModel.findOne({ _id: walletId }).populate({
