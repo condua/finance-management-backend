@@ -51,14 +51,10 @@ class TransactionService {
           createdAt,
           type,
           category,
-          $or: [
-            { title: { $regex: search, $options: 'i' } },
-            {
-              amount: {
-                $gte:  !!Number(search) ? Number(search) : 0,
-              },
-            },
-          ],
+          amount: {
+            $gte: !!Number(search) ? Number(search) : 0,
+          },
+          title: { $regex: search, $options: 'i' } 
         },
         options: {
           limit,
