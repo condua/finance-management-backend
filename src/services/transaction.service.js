@@ -15,7 +15,7 @@ const { findPlansFilteredByTransaction } = require('../models/repositories/walle
 const { getInfoData } = require('../utils')
 
 class TransactionService {
-  static getAllTransactions = async ({ walletId, options }) => {
+  static getAllTransactions = async ({ walletId, options, search }) => {
     const foundWallet = await walletModel.findOne({ _id: walletId })
     if (!foundWallet) {
       throw new BadRequestError({
@@ -51,6 +51,14 @@ class TransactionService {
           createdAt,
           type,
           category,
+          $or: [
+            { title: { $regex: search, $options: 'i' } },
+            {
+              amount: {
+                $gte:  !!Number(search) ? Number(search) : 0,
+              },
+            },
+          ],
         },
         options: {
           limit,

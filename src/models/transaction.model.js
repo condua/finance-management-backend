@@ -42,18 +42,6 @@ const transactionSchema = new Schema(
       required: true,
     },
   
-    // createdBy: {
-    //   type: Types.ObjectId,
-    //   ref: 'User',
-    // },
-    // status: {
-    //   type: String,
-    //   enum: {
-    //     values: ['pending', 'completed', 'cancelled'],
-    //   },
-    //   default: 'pending',
-    // },
-
   },
   {
     timestamps: false,

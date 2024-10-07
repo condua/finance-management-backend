@@ -22,6 +22,7 @@ class TransactionController {
           startDate: req.query.startDate,
           endDate: req.query.endDate,
         },
+        search: req.query.search
       }),
     }).send(res)
   }
