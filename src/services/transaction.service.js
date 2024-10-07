@@ -2,7 +2,7 @@ const transactionModel = require('../models/transaction.model')
 const categoryModel = require('../models/category.model')
 const { getStartDate, getEndDate, getLastStartDate, getLastEndDate } = require('../utils/getDate')
 const UserServices = require('./user.service')
-const walletModel= require('../models/wallet.model')
+const walletModel = require('../models/wallet.model')
 const { BadRequestError, InternalServerError } = require('../core/error.response')
 const { planModel, budgetModel } = require('../models/financialPlan.model')
 const OCRService = require('./OCR.service')
@@ -42,7 +42,8 @@ class TransactionService {
     const type = options.type !== 'all' ? options.type : { $in: ['income', 'expense'] }
     const limit = options.limit || 0
     const sort = { createdAt: options.sort === 'desc' ? -1 : 1 }
-    const category = options.category !== 'all' ? { $in: options.category.split(',') } : { $exists: true }
+    const category =
+      options.category !== 'all' ? { $in: options.category.split(',') } : { $exists: true }
     try {
       const { transactions } = await walletModel.findOne({ _id: walletId }).populate({
         path: 'transactions',
@@ -51,10 +52,7 @@ class TransactionService {
           createdAt,
           type,
           category,
-          amount: {
-            $gte: !!Number(search) ? Number(search) : 0,
-          },
-          title: { $regex: search, $options: 'i' } 
+          title: { $regex: search, $options: 'i' },
         },
         options: {
           limit,
@@ -209,7 +207,7 @@ class TransactionService {
         throw new BadRequestError({
           data: {
             category: 'Category not found',
-          }
+          },
         })
       }
     }
