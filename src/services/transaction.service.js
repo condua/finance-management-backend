@@ -52,7 +52,7 @@ class TransactionService {
           createdAt,
           type,
           category,
-          title: { $regex: search, $options: 'i' },
+          title: { $regex: Number.isNaN(Number(search)) ? search: '', $options: 'i' },
         },
         options: {
           limit,
