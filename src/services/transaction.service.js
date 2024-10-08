@@ -17,6 +17,7 @@ const { getInfoData } = require('../utils')
 class TransactionService {
   static getAllTransactions = async ({ walletId, options, search }) => {
     const foundWallet = await walletModel.findOne({ _id: walletId })
+    console.log(options.category)
     if (!foundWallet) {
       throw new BadRequestError({
         data: {
