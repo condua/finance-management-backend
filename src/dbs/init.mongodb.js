@@ -5,7 +5,7 @@ const {
   db: { host, port, name },
 } = require("../configs/mongodb.config");
 const connectString =
-  "mongodb://localhost:27017/DoAnTotNghiep" ||
+  "mongodb+srv://phanhoangphuc0311:phuc1755@walletapp.mlbxa.mongodb.net/DoAnTotNghiep?retryWrites=true&w=majority&appName=WalletApp" ||
   `mongodb://${host}:${port}/${name}`;
 const { countConnection } = require("../helpers/check.connect");
 console.log("Connecting mongodb with uri::", connectString);
