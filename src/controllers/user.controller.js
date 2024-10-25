@@ -41,6 +41,12 @@ class UserController {
       metadata: await UserService.getInfo(userId),
     }).send(res);
   };
+  getAllUsers = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Get info success!",
+      metadata: await UserService.getAllUsers(),
+    }).send(res);
+  };
 }
 
 module.exports = new UserController();

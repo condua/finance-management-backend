@@ -96,6 +96,10 @@ class UserService {
       fields: ["_id", "name", "email", "avatar_url", "gender", "dob"],
     });
   };
+  static getAllUsers = async () => {
+    return await userModel.find().select("name email avatar_url invitations");
+  };
+
   static getInfoById = async (userId) => {
     const user = await userModel.findById(userId);
     if (!user) {

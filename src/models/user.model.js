@@ -56,6 +56,7 @@ var userSchema = new Schema(
     settings: {},
     invitations: [
       {
+        inviter: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         wallet: { type: mongoose.Schema.Types.ObjectId, ref: "Wallet" },
         status: {
           type: String,

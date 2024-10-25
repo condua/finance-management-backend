@@ -285,7 +285,7 @@ const inviteMember = async ({ walletId, userId, inviterId }) => {
 
     // Thêm lời mời vào wallet và user
     wallet.invitations.push({ user: userId });
-    user.invitations.push({ wallet: walletId });
+    user.invitations.push({ inviter: inviterId, wallet: walletId });
 
     // Lưu lại thay đổi
     await wallet.save();
@@ -326,6 +326,7 @@ const respondToInvitation = async ({ walletId, userId, response }) => {
   }
 
   if (response === "accept") {
+    // Người dùng chấp nhận lời mời
     wallet.members.push(userId);
     wallet.invitations = wallet.invitations.filter(
       (invite) => invite.user.toString() !== userId
@@ -341,13 +342,20 @@ const respondToInvitation = async ({ walletId, userId, response }) => {
 
     return { message: "User accepted the invitation and joined the wallet" };
   } else if (response === "decline") {
-    invitation.status = "rejected";
-    userInvitation.status = "rejected";
+    // Xóa lời mời khỏi ví và người dùng nếu từ chối
+    wallet.invitations = wallet.invitations.filter(
+      (invite) => invite.user.toString() !== userId
+    );
+    user.invitations = user.invitations.filter(
+      (invite) => invite.wallet.toString() !== walletId
+    );
 
     await wallet.save();
     await user.save();
 
-    return { message: "User declined the invitation" };
+    return {
+      message: "User declined the invitation and the invitation was removed",
+    };
   } else {
     throw new Error("Invalid response");
   }

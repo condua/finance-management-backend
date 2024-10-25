@@ -16,6 +16,8 @@ router.patch(
   uploadDisk.single("file"),
   asyncHandler(userController.updateInfo)
 );
+router.get("/allusers", asyncHandler(userController.getAllUsers));
+
 router.get("/", asyncHandler(userController.getInfo));
 router.get("/:userId", asyncHandler(userController.getInfoById));
 
