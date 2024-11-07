@@ -93,7 +93,15 @@ class UserService {
     }
     return getInfoData({
       object: user,
-      fields: ["_id", "name", "email", "avatar_url", "gender", "dob"],
+      fields: [
+        "_id",
+        "name",
+        "email",
+        "avatar_url",
+        "gender",
+        "dob",
+        "invitations",
+      ],
     });
   };
   static getAllUsers = async () => {

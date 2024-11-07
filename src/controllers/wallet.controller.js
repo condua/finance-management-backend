@@ -138,6 +138,30 @@ class WalletController {
       next(error); // Chuyển lỗi cho middleware xử lý lỗi tiếp theo
     }
   };
+  promoteToAdmin = async (req, res, next) => {
+    try {
+      const walletId = req.params.walletId;
+      const ownerId = req.headers[HEADER.CLIENT_ID];
+      const memberId = req.params.memberId;
+
+      const result = await WalletService.promoteToAdmin({
+        walletId,
+        ownerId,
+        memberId,
+      });
+
+      // new SuccessResponse({
+      //   message: result.message,
+      // }).send(res);
+      new SuccessResponse({
+        message: result.message,
+        metadata: result,
+      }).send(res);
+    } catch (error) {
+      // Forward the error to the error-handling middleware
+      next(error);
+    }
+  };
 }
 
 module.exports = new WalletController();

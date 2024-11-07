@@ -27,4 +27,9 @@ router.get(
   asyncHandler(walletController.getAllMessagesByWalletId)
 );
 
+router.post(
+  "/:walletId/promote/:memberId",
+  asyncHandler(walletController.promoteToAdmin)
+);
+
 module.exports = router;

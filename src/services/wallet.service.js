@@ -42,7 +42,7 @@ const getAllWallets = async (userId) => {
         "debts",
         "owner",
         "members",
-        "admin",
+        "admins",
       ],
     })
   );
@@ -86,7 +86,7 @@ const createWallet = async ({ userId, wallet }) => {
         "debts",
         "owner",
         "members",
-        "admin",
+        "admins",
       ],
     });
   } catch (error) {
@@ -113,7 +113,7 @@ const findById = async (walletId) => {
       "debts",
       "owner",
       "members",
-      "admin",
+      "admins",
     ],
   });
 };
@@ -149,7 +149,7 @@ const getWalletById = async (userId, walletId) => {
         "debts",
         "owner",
         "members",
-        "admin",
+        "admins",
       ],
     });
   } catch (error) {
@@ -237,6 +237,9 @@ const updateWallet = async ({ userId, walletId, wallet }) => {
         "transactions",
         "financial_plans",
         "debts",
+        "owner",
+        "members",
+        "admins",
       ],
     });
   } catch (error) {
@@ -414,6 +417,96 @@ const getAllMessagesByWalletId = async ({ walletId, userId }) => {
     throw new InternalServerError("Cannot get messages");
   }
 };
+
+// Nâng cấp quyền thành viên thành admin
+const promoteToAdmin = async ({ walletId, memberId, ownerId }) => {
+  const wallet = await walletModel.findById(walletId);
+
+  if (!wallet) {
+    throw new Error("Wallet not found");
+  }
+
+  // Kiểm tra nếu ownerId đúng với owner của ví
+  if (wallet.owner.toString() !== ownerId) {
+    throw new Error(
+      "Invalid ownerId. Only the owner can promote members to admin"
+    );
+  }
+
+  // Kiểm tra nếu người dùng có phải là thành viên của ví nhóm
+  if (!wallet.members.includes(memberId)) {
+    throw new Error("User is not a member of this wallet");
+  }
+
+  // Kiểm tra nếu người dùng đã là admin
+  if (wallet.admins.includes(memberId)) {
+    throw new Error("User is already an admin");
+  }
+
+  // Thêm người dùng vào danh sách admin
+  wallet.admins.push(memberId);
+  await wallet.save();
+
+  return getInfoData({
+    object: wallet,
+    fields: [
+      "_id",
+      "icon",
+      "name",
+      "balance",
+      "type",
+      "transactions",
+      "financial_plans",
+      "debts",
+      "owner",
+      "members",
+      "admins",
+    ],
+  });
+
+  // Giáng cấp quyền admin xuống thành viên thường
+  const demoteFromAdmin = async ({ walletId, memberId, ownerId }) => {
+    const wallet = await walletModel.findById(walletId);
+
+    if (!wallet) {
+      throw new Error("Wallet not found");
+    }
+
+    // Kiểm tra nếu ownerId đúng với owner của ví
+    if (wallet.owner.toString() !== ownerId) {
+      throw new Error("Invalid ownerId. Only the owner can demote admins");
+    }
+
+    // Kiểm tra nếu người dùng có phải là admin của ví
+    if (!wallet.admins.includes(memberId)) {
+      throw new Error("User is not an admin");
+    }
+
+    // Xóa người dùng khỏi danh sách admin
+    wallet.admins = wallet.admins.filter(
+      (adminId) => adminId.toString() !== memberId
+    );
+    await wallet.save();
+
+    return getInfoData({
+      object: wallet,
+      fields: [
+        "_id",
+        "icon",
+        "name",
+        "balance",
+        "type",
+        "transactions",
+        "financial_plans",
+        "debts",
+        "owner",
+        "members",
+        "admins",
+      ],
+    });
+  };
+};
+
 module.exports = {
   getAllWallets,
   createWallet,
@@ -425,4 +518,5 @@ module.exports = {
   respondToInvitation,
   sendMessage,
   getAllMessagesByWalletId,
+  promoteToAdmin,
 };
