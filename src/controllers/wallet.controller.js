@@ -105,12 +105,13 @@ class WalletController {
     try {
       const walletId = req.params.id;
       const userId = req.headers[HEADER.CLIENT_ID];
-      const { content, images } = req.body;
+      const { content, images, video } = req.body;
       const result = await WalletService.sendMessage({
         walletId,
         userId,
         content,
         images,
+        video,
       });
       new SuccessResponse({
         message: "User sent message successfully",
@@ -138,6 +139,26 @@ class WalletController {
       next(error); // Chuyển lỗi cho middleware xử lý lỗi tiếp theo
     }
   };
+  promoteToOwner = async (req, res, next) => {
+    try {
+      const walletId = req.params.walletId;
+      const ownerId = req.headers[HEADER.CLIENT_ID];
+      const memberId = req.params.memberId;
+      const result = await WalletService.promoteToOwner({
+        walletId,
+        ownerId,
+        memberId,
+      });
+      new SuccessResponse({
+        message: result.message,
+        metadata: result,
+      }).send(res);
+    } catch (error) {
+      // Forward the error to the error-handling middleware
+      next(error);
+    }
+  };
+
   promoteToAdmin = async (req, res, next) => {
     try {
       const walletId = req.params.walletId;
@@ -153,6 +174,45 @@ class WalletController {
       // new SuccessResponse({
       //   message: result.message,
       // }).send(res);
+      new SuccessResponse({
+        message: result.message,
+        metadata: result,
+      }).send(res);
+    } catch (error) {
+      // Forward the error to the error-handling middleware
+      next(error);
+    }
+  };
+  demoteFromAdmin = async (req, res, next) => {
+    try {
+      const walletId = req.params.walletId;
+      const ownerId = req.headers[HEADER.CLIENT_ID];
+      const memberId = req.params.memberId;
+
+      const result = await WalletService.demoteFromAdmin({
+        walletId,
+        ownerId,
+        memberId,
+      });
+
+      new SuccessResponse({
+        message: result.message,
+        metadata: result,
+      }).send(res);
+    } catch (error) {
+      // Forward the error to the error-handling middleware
+      next(error);
+    }
+  };
+
+  leaveGroup = async (req, res, next) => {
+    try {
+      const walletId = req.params.walletId;
+      const userId = req.headers[HEADER.CLIENT_ID];
+      const result = await WalletService.leaveGroup({
+        walletId,
+        userId,
+      });
       new SuccessResponse({
         message: result.message,
         metadata: result,

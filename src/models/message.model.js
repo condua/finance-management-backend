@@ -15,6 +15,8 @@ const MessageSchema = new mongoose.Schema({
     required: true,
   },
   content: { type: String },
+  video: { type: String },
+
   images: [{ type: String }], // Thêm mảng chứa URL hoặc đường dẫn của hình ảnh
   timestamp: { type: Date, default: Date.now },
 });

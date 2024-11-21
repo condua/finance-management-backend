@@ -52,6 +52,7 @@ const walletSchema = new Schema(
     transactions: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Transaction" },
     ],
+    histories: [],
     invitations: [
       {
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

@@ -26,10 +26,19 @@ router.get(
   "/:id/messages",
   asyncHandler(walletController.getAllMessagesByWalletId)
 );
+router.post(
+  "/:walletId/promote/owner/:memberId",
+  asyncHandler(walletController.promoteToOwner)
+);
 
 router.post(
   "/:walletId/promote/:memberId",
   asyncHandler(walletController.promoteToAdmin)
 );
+router.post(
+  "/:walletId/demote/:memberId",
+  asyncHandler(walletController.demoteFromAdmin)
+);
+router.post("/:walletId/leave", asyncHandler(walletController.leaveWallet));
 
 module.exports = router;
