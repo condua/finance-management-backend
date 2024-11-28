@@ -40,5 +40,8 @@ router.post(
   asyncHandler(walletController.demoteFromAdmin)
 );
 router.post("/:walletId/leave", asyncHandler(walletController.leaveWallet));
-
+router.post(
+  "/:walletId/remove/:memberId",
+  asyncHandler(walletController.removeMember)
+);
 module.exports = router;

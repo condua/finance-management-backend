@@ -101,6 +101,7 @@ class UserService {
         "gender",
         "dob",
         "invitations",
+        "membership",
       ],
     });
   };
@@ -119,7 +120,15 @@ class UserService {
     }
     return getInfoData({
       object: user,
-      fields: ["_id", "name", "email", "avatar_url", "gender", "dob"],
+      fields: [
+        "_id",
+        "name",
+        "email",
+        "avatar_url",
+        "gender",
+        "dob",
+        "membership",
+      ],
     });
   };
   static removeWalletById = async (userId, walletId) => {

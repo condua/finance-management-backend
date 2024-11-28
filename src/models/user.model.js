@@ -65,6 +65,16 @@ var userSchema = new Schema(
         },
       },
     ],
+    membership: {
+      type: Boolean,
+      default: false,
+    },
+    otp: {
+      type: Number,
+    },
+    otpExpiry: {
+      type: Date,
+    },
     createdAt: { type: Date, default: Date.now },
   },
   {

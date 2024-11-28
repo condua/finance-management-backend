@@ -555,6 +555,66 @@ const demoteFromAdmin = async ({ walletId, memberId, ownerId }) => {
     ],
   });
 };
+const removeMember = async ({ walletId, memberId, ownerId }) => {
+  const wallet = await walletModel.findById(walletId);
+  const userToRemove = await userModel.findById(memberId);
+
+  if (!wallet) {
+    throw new Error("Wallet not found");
+  }
+  const member = wallet.members.find(
+    (memberId) => memberId.toString() === userId
+  );
+  if (!member) {
+    throw new Error("User is not a member of the wallet");
+  }
+  const isOwner = wallet.owner.toString() === ownerId;
+  const isAdmin = wallet.admins.some((admin) => admin.toString() === memberId);
+  if (!isOwner && !isAdmin) {
+    throw new BadRequestError("Only the owner or an admin can remove members");
+  }
+
+  if (isAdmin && isOwner === false && wallet.admins.includes(memberId)) {
+    throw new BadRequestError("Admins cannot remove other admins");
+  }
+
+  // Thực hiện xóa thành viên
+  wallet.members = wallet.members.filter(
+    (member) => member.toString() !== memberId
+  );
+
+  // Nếu là admin, cũng cần xóa khỏi danh sách admin nếu người bị xóa là admin
+  if (wallet.admins.includes(memberId)) {
+    wallet.admins = wallet.admins.filter(
+      (admin) => admin.toString() !== userId
+    );
+  }
+
+  // Lưu thay đổi
+  await wallet.save();
+
+  // Xóa ví khỏi danh sách của người dùng bị xóa
+  userToRemove.wallets = userToRemove.wallets.filter(
+    (wallet) => wallet.toString() !== walletId
+  );
+  await userToRemove.save();
+  return getInfoData({
+    object: wallet,
+    fields: [
+      "_id",
+      "icon",
+      "name",
+      "balance",
+      "type",
+      "transactions",
+      "financial_plans",
+      "debts",
+      "owner",
+      "members",
+      "admins",
+    ],
+  });
+};
 const leaveGroup = async ({ userId, walletId }) => {
   const wallet = await walletModel.findById(walletId);
   if (!wallet) {
@@ -602,4 +662,5 @@ module.exports = {
   demoteFromAdmin,
   leaveGroup,
   promoteToOwner,
+  removeMember,
 };

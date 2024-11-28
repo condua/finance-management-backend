@@ -1,8 +1,8 @@
-'use strict'
+"use strict";
 
-const AccessService = require('../services/access.service')
+const AccessService = require("../services/access.service");
 
-const { OK, CREATED, SuccessResponse } = require('../core/success.response')
+const { OK, CREATED, SuccessResponse } = require("../core/success.response");
 
 class AccessController {
   /**
@@ -13,54 +13,81 @@ class AccessController {
    * @returns {Object} - A JSON response
    */
   handlerRefreshToken = async (req, res, next) => {
-
     new SuccessResponse({
-      message: 'Get token success!',
+      message: "Get token success!",
       metadata: await AccessService.handlerRefreshToken({
         keyStore: req.keyStore,
         refreshToken: req.refreshToken,
         user: req.user,
       }),
-    }).send(res)
-  }
+    }).send(res);
+  };
 
   signUp = async (req, res, next) => {
     new CREATED({
-      message: 'Signup success!',
+      message: "Signup success!",
       metadata: await AccessService.signUp(req.body),
-    }).send(res)
-  }
+    }).send(res);
+  };
 
   login = async (req, res, next) => {
     new SuccessResponse({
-      message: 'Login success!',
+      message: "Login success!",
       metadata: await AccessService.login(req.body),
-    }).send(res)
-  }
+    }).send(res);
+  };
 
   logout = async (req, res, next) => {
     new SuccessResponse({
-      message: 'Logout success!',
+      message: "Logout success!",
       metadata: await AccessService.logout(req.keyStore),
-    }).send(res)
-  }
+    }).send(res);
+  };
 
   changePassword = async (req, res, next) => {
     new SuccessResponse({
-      message: 'Change password success!',
+      message: "Change password success!",
       metadata: await AccessService.changePassword({
-        userId: req.headers['x-client-id'],
+        userId: req.headers["x-client-id"],
         ...req.body,
       }),
-    }).send(res)
-  }
+    }).send(res);
+  };
 
   test = async (req, res, next) => {
     new SuccessResponse({
-      message: 'Test success!',
-      metadata: { test: 'test' },
-    }).send(res)
-  }
+      message: "Test success!",
+      metadata: { test: "test" },
+    }).send(res);
+  };
+
+  sendEmail = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Send email success!",
+      metadata: await AccessService.sendEmail(req.body),
+    }).send(res);
+  };
+
+  verifyOtp = async (req, res, next) => {
+    new SuccessResponse({
+      message: "OTP verified successfully!",
+      metadata: await AccessService.verifyOtp(req.body),
+    }).send(res);
+  };
+
+  changePasswordByOtp = async (req, res, next) => {
+    new SuccessResponse({
+      message: "Password changed successfully!",
+      metadata: await AccessService.changePasswordByOtp(req.body),
+    }).send(res);
+  };
+
+  resendOtp = async (req, res, next) => {
+    new SuccessResponse({
+      message: "OTP resent successfully!",
+      metadata: await AccessService.resendOtp(req.body),
+    }).send(res);
+  };
 }
 
-module.exports = new AccessController()
+module.exports = new AccessController();

@@ -204,7 +204,25 @@ class WalletController {
       next(error);
     }
   };
-
+  removeMember = async (req, res, next) => {
+    try {
+      const walletId = req.params.walletId;
+      const ownerId = req.headers[HEADER.CLIENT_ID];
+      const memberId = req.params.memberId;
+      const result = await WalletService.removeMember({
+        walletId,
+        ownerId,
+        memberId,
+      });
+      new SuccessResponse({
+        message: result.message,
+        metadata: result,
+      }).send(res);
+    } catch (error) {
+      // Forward the error to the error-handling middleware
+      next(error);
+    }
+  };
   leaveGroup = async (req, res, next) => {
     try {
       const walletId = req.params.walletId;
