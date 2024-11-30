@@ -1,7 +1,7 @@
-const { model, Schema, Types } = require('mongoose') // Erase if already required
+const { model, Schema, Types } = require("mongoose"); // Erase if already required
 
-const DOCUMENT_NAME = 'Transaction'
-const COLLECTION_NAME = 'transactions'
+const DOCUMENT_NAME = "Transaction";
+const COLLECTION_NAME = "transactions";
 
 // Declare the Schema of the Mongo model
 const transactionSchema = new Schema(
@@ -9,7 +9,7 @@ const transactionSchema = new Schema(
     amount: {
       type: Number,
       required: true,
-      min: [0, 'Amount must be greater than 0'],
+      min: [0, "Amount must be greater than 0"],
       default: 0,
     },
     title: {
@@ -24,7 +24,7 @@ const transactionSchema = new Schema(
     },
     category: {
       type: Types.ObjectId,
-      ref: 'Category',
+      ref: "Category",
     },
     description: {
       type: String,
@@ -37,16 +37,16 @@ const transactionSchema = new Schema(
     type: {
       type: String,
       enum: {
-        values: ['income', 'expense'],
+        values: ["income", "expense"],
       },
       required: true,
     },
-  
+    histories: [{}],
   },
   {
     timestamps: false,
     collection: COLLECTION_NAME,
   }
-)
+);
 //Export the model
-module.exports = model(DOCUMENT_NAME, transactionSchema)
+module.exports = model(DOCUMENT_NAME, transactionSchema);

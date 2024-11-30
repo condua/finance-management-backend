@@ -65,7 +65,7 @@ class AccessService {
                   </div>
                   <p style="font-size:15px">Hello ${email},</p>
                   <p>Thank you for choosing WalletPal. Use this OTP to change your account password on the WalletPal.</p>
-                  <p>Remember, Never share this OTP with anyone.</p>
+                  <p>Remember, Never share this OTP with anyone. Please enter the code in 5 minutes</p>
                   <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${otp}</h2>
                   <p style="font-size:15px;">Regards,<br />Team WalletPal</p>
                   <hr style="border:none;border-top:5px solid #eee" />
@@ -194,7 +194,7 @@ class AccessService {
                   </div>
                   <p style="font-size:15px">Hello ${email},</p>
                   <p>Thank you for choosing WalletPal. Use this OTP to change your account password on the WalletPal.</p>
-                  <p>Remember, Never share this OTP with anyone.</p>
+                  <p>Remember, Never share this OTP with anyone. Please enter the code in 5 minutes</p>
                   <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${otp}</h2>
                   <p style="font-size:15px;">Regards,<br />Team WalletPal</p>
                   <hr style="border:none;border-top:5px solid #eee" />
