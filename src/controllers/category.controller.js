@@ -1,52 +1,58 @@
-const { CREATED, SuccessResponse } = require('../core/success.response')
-const CategoryService = require('../services/category.service')
+const { CREATED, SuccessResponse } = require("../core/success.response");
+const CategoryService = require("../services/category.service");
 
 class CategoryController {
   createCategory = async (req, res) => {
     new CREATED({
-      message: 'Create category success!',
+      message: "Create category success!",
       metadata: await CategoryService.createCategory({
-        userId: req.headers['x-client-id'],
+        userId: req.headers["x-client-id"],
         category: req.body,
       }),
-    }).send(res)
-  }
+    }).send(res);
+  };
 
   updateCategory = async (req, res) => {
     new SuccessResponse({
-      message: 'Update category success!',
+      message: "Update category success!",
       metadata: await CategoryService.updateCategory({
-        userId: req.headers['x-client-id'],
+        userId: req.headers["x-client-id"],
         categoryId: req.params.categoryId,
         update: req.body,
       }),
-    }).send(res)
-  }
+    }).send(res);
+  };
 
   deleteCategory = async (req, res) => {
     new SuccessResponse({
-      message: 'Delete category success!',
+      message: "Delete category success!",
       metadata: await CategoryService.deleteCategory({
-        userId: req.headers['x-client-id'],
+        userId: req.headers["x-client-id"],
         categoryId: req.params.categoryId,
       }),
-    }).send(res)
-  }
+    }).send(res);
+  };
 
-
-  
   getAllCategories = async (req, res) => {
     new SuccessResponse({
-      message: 'Get all categories success!',
+      message: "Get all categories success!",
       metadata: await CategoryService.getAllCategories({
-        userId: req.headers['x-client-id'],
+        userId: req.headers["x-client-id"],
         filter: req.query.filter,
       }),
-    }).send(res)
-  }
-  
-  
-  
+    }).send(res);
+  };
+
+  // Thêm phương thức mới
+  getCategoryById = async (req, res) => {
+    new SuccessResponse({
+      message: "Get category by ID success!",
+      metadata: await CategoryService.getCategoryById({
+        userId: req.headers["x-client-id"],
+        categoryId: req.params.categoryId,
+      }),
+    }).send(res);
+  };
 }
 
-module.exports = new CategoryController()
+module.exports = new CategoryController();

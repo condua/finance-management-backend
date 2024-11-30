@@ -93,6 +93,7 @@ class TransactionService {
             "title",
             "description",
             "createdAt",
+            "histories",
           ],
         });
       });
@@ -120,7 +121,15 @@ class TransactionService {
         });
       return getInfoData({
         object: transaction,
-        fields: ["_id", "amount", "type", "category", "title", "createdAt"],
+        fields: [
+          "_id",
+          "amount",
+          "type",
+          "category",
+          "title",
+          "createdAt",
+          "histories",
+        ],
       });
     } catch (error) {
       console.error(error);
@@ -218,7 +227,15 @@ class TransactionService {
       }
       return getInfoData({
         object: newTransaction,
-        fields: ["_id", "amount", "type", "category", "title", "createdAt"],
+        fields: [
+          "_id",
+          "amount",
+          "type",
+          "category",
+          "title",
+          "createdAt",
+          "histories",
+        ],
       });
     } catch (error) {
       // Rollback
@@ -267,7 +284,17 @@ class TransactionService {
       // Push the updated transaction into histories
       await transactionModel.updateOne(
         { _id: transactionId },
-        { $push: { histories: foundTransaction } }
+        {
+          $push: {
+            histories: {
+              amount: foundTransaction.amount,
+              title: foundTransaction.title,
+              category: foundTransaction.category,
+              createAt: Date.now(),
+              type: foundTransaction.type,
+            },
+          },
+        }
       );
 
       const updateAmount =
@@ -352,7 +379,15 @@ class TransactionService {
 
       return getInfoData({
         object: updatedTransaction,
-        fields: ["_id", "amount", "type", "category", "title", "createdAt"],
+        fields: [
+          "_id",
+          "amount",
+          "type",
+          "category",
+          "title",
+          "createdAt",
+          "histories",
+        ],
       });
     } catch (error) {
       console.error(error);
