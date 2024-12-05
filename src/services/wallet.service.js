@@ -67,6 +67,7 @@ const createWallet = async ({ userId, wallet }) => {
   // Add the owner field to the wallet object
   wallet.owner = userId;
   wallet.members = [userId];
+  wallet.memberEmails = [foundUser.email];
   const newWallet = await walletModel.create(wallet);
   if (!newWallet) {
     throw new InternalServerError("Cannot create wallet");
@@ -86,6 +87,7 @@ const createWallet = async ({ userId, wallet }) => {
         "debts",
         "owner",
         "members",
+        "memberEmails",
         "admins",
       ],
     });
@@ -113,6 +115,7 @@ const findById = async (walletId) => {
       "debts",
       "owner",
       "members",
+      "memberEmails",
       "admins",
     ],
   });
@@ -149,6 +152,7 @@ const getWalletById = async (userId, walletId) => {
         "debts",
         "owner",
         "members",
+        "memberEmails",
         "admins",
       ],
     });
@@ -246,6 +250,7 @@ const updateWallet = async ({ userId, walletId, wallet }) => {
         "debts",
         "owner",
         "members",
+        "memberEmails",
         "admins",
       ],
     });
@@ -338,6 +343,7 @@ const respondToInvitation = async ({ walletId, userId, response }) => {
   if (response === "accept") {
     // Người dùng chấp nhận lời mời
     wallet.members.push(userId);
+    wallet.memberEmails.push(user.email);
     wallet.invitations = wallet.invitations.filter(
       (invite) => invite.user.toString() !== userId
     );
@@ -464,6 +470,7 @@ const promoteToOwner = async ({ walletId, memberId, ownerId }) => {
       "debts",
       "owner",
       "members",
+      "memberEmails",
       "admins",
     ],
   });
@@ -510,6 +517,7 @@ const promoteToAdmin = async ({ walletId, memberId, ownerId }) => {
       "debts",
       "owner",
       "members",
+      "memberEmails",
       "admins",
     ],
   });
@@ -551,30 +559,52 @@ const demoteFromAdmin = async ({ walletId, memberId, ownerId }) => {
       "debts",
       "owner",
       "members",
+      "memberEmails",
       "admins",
     ],
   });
 };
 const removeMember = async ({ walletId, memberId, ownerId }) => {
+  // Lấy thông tin ví và người dùng
   const wallet = await walletModel.findById(walletId);
   const userToRemove = await userModel.findById(memberId);
 
+  // Kiểm tra sự tồn tại của ví và thành viên
   if (!wallet) {
     throw new Error("Wallet not found");
   }
-  const member = wallet.members.find(
-    (memberId) => memberId.toString() === userId
-  );
-  if (!member) {
-    throw new Error("User is not a member of the wallet");
-  }
-  const isOwner = wallet.owner.toString() === ownerId;
-  const isAdmin = wallet.admins.some((admin) => admin.toString() === memberId);
-  if (!isOwner && !isAdmin) {
-    throw new BadRequestError("Only the owner or an admin can remove members");
+  if (!userToRemove) {
+    throw new Error("User to remove not found");
   }
 
-  if (isAdmin && isOwner === false && wallet.admins.includes(memberId)) {
+  // Kiểm tra xem thành viên có trong ví hay không
+  const isMember = wallet.members.some(
+    (member) => member.toString() === memberId
+  );
+  if (!isMember) {
+    throw new Error("User is not a member of the wallet");
+  }
+
+  // Xác định quyền hạn của người yêu cầu
+  const isOwner = wallet.owner.toString() === ownerId;
+  const isRequesterAdmin = wallet.admins.some(
+    (admin) => admin.toString() === ownerId
+  );
+  const isTargetAdmin = wallet.admins.some(
+    (admin) => admin.toString() === memberId
+  );
+
+  // Chỉ chủ sở hữu hoặc admin mới được xóa thành viên
+  if (!isOwner && !isRequesterAdmin) {
+    throw new BadRequestError({
+      data: {
+        message: "Only the owner or an admin can remove members",
+      },
+    });
+  }
+
+  // Admin không thể xóa admin khác
+  if (isRequesterAdmin && isTargetAdmin) {
     throw new BadRequestError("Admins cannot remove other admins");
   }
 
@@ -583,21 +613,23 @@ const removeMember = async ({ walletId, memberId, ownerId }) => {
     (member) => member.toString() !== memberId
   );
 
-  // Nếu là admin, cũng cần xóa khỏi danh sách admin nếu người bị xóa là admin
-  if (wallet.admins.includes(memberId)) {
+  // Nếu người bị xóa là admin, xóa khỏi danh sách admin
+  if (isTargetAdmin) {
     wallet.admins = wallet.admins.filter(
-      (admin) => admin.toString() !== userId
+      (admin) => admin.toString() !== memberId
     );
   }
 
-  // Lưu thay đổi
+  // Lưu thay đổi ví
   await wallet.save();
 
-  // Xóa ví khỏi danh sách của người dùng bị xóa
+  // Xóa ví khỏi danh sách ví của người dùng bị xóa
   userToRemove.wallets = userToRemove.wallets.filter(
     (wallet) => wallet.toString() !== walletId
   );
   await userToRemove.save();
+
+  // Trả về thông tin ví sau khi cập nhật
   return getInfoData({
     object: wallet,
     fields: [
@@ -611,25 +643,58 @@ const removeMember = async ({ walletId, memberId, ownerId }) => {
       "debts",
       "owner",
       "members",
+      "memberEmails",
       "admins",
     ],
   });
 };
+
 const leaveGroup = async ({ userId, walletId }) => {
+  // Lấy thông tin ví và người dùng
   const wallet = await walletModel.findById(walletId);
+  const user = await userModel.findById(userId);
+
+  // Kiểm tra sự tồn tại của ví và người dùng
   if (!wallet) {
     throw new Error("Wallet not found");
   }
-  const member = wallet.members.find(
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Kiểm tra xem người dùng có phải là thành viên của ví không
+  const isMember = wallet.members.some(
     (memberId) => memberId.toString() === userId
   );
-  if (!member) {
+  if (!isMember) {
     throw new Error("User is not a member of the wallet");
   }
+
+  // // Ngăn không cho chủ sở hữu rời khỏi nhóm
+  // if (wallet.owner.toString() === userId) {
+  //   throw new BadRequestError("The owner cannot leave the wallet");
+  // }
+
+  // Xóa người dùng khỏi danh sách thành viên của ví
   wallet.members = wallet.members.filter(
     (memberId) => memberId.toString() !== userId
   );
+
+  // Nếu người dùng là admin, xóa khỏi danh sách admin
+  wallet.admins = wallet.admins.filter(
+    (adminId) => adminId.toString() !== userId
+  );
+
+  // Xóa ví khỏi danh sách ví của người dùng
+  user.wallets = user.wallets.filter(
+    (walletItemId) => walletItemId.toString() !== walletId
+  );
+
+  // Lưu thay đổi
   await wallet.save();
+  await user.save();
+
+  // Trả về thông tin ví sau khi cập nhật
   return getInfoData({
     object: wallet,
     fields: [
@@ -643,10 +708,12 @@ const leaveGroup = async ({ userId, walletId }) => {
       "debts",
       "owner",
       "members",
+      "memberEmails",
       "admins",
     ],
   });
 };
+
 module.exports = {
   getAllWallets,
   createWallet,

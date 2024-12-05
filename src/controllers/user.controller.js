@@ -17,6 +17,7 @@ class UserController {
           name: req.body?.name,
           dob: req.body?.dob,
           gender: req.body?.gender,
+          avatar_url: req.body?.avatar_url,
         },
         file: file
           ? {

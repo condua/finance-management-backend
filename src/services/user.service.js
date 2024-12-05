@@ -44,7 +44,10 @@ class UserService {
     }
 
     const filter = { _id: userId },
-      update = { ...removeUndefinedFields(user), avatar_url: thumb_url },
+      update = {
+        ...removeUndefinedFields(user),
+        //  avatar_url: thumb_url
+      },
       options = { new: true, update: true };
     return await userModel.findOneAndUpdate(filter, update, options).lean();
   };

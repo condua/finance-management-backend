@@ -39,9 +39,6 @@ router.post(
   "/:walletId/demote/:memberId",
   asyncHandler(walletController.demoteFromAdmin)
 );
-router.post("/:walletId/leave", asyncHandler(walletController.leaveWallet));
-router.post(
-  "/:walletId/remove/:memberId",
-  asyncHandler(walletController.removeMember)
-);
+router.post("/:walletId/leave", asyncHandler(walletController.leaveGroup));
+router.post("/:walletId/remove/:memberId", walletController.removeMember);
 module.exports = router;
