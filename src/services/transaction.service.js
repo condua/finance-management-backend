@@ -253,6 +253,7 @@ class TransactionService {
   }) => {
     // validate input fields
     const foundUser = await UserServices.findById(userId);
+
     if (!foundUser || !foundUser.wallets.includes(walletId)) {
       throw new BadRequestError("Not found wallet or user");
     }
@@ -292,6 +293,7 @@ class TransactionService {
               category: foundTransaction.category,
               createAt: Date.now(),
               type: foundTransaction.type,
+              name: foundUser.name,
             },
           },
         }
