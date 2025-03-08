@@ -20124,3 +20124,6 @@
 ::ffff:10.0.147.39 - - [25/Dec/2024:08:36:54 +0000] "PATCH /v1/api/users HTTP/1.1" 200 - "-" "okhttp/4.9.2"
 ::ffff:10.0.147.39 - - [25/Dec/2024:08:36:54 +0000] "GET /v1/api/users HTTP/1.1" 200 340 "-" "okhttp/4.9.2"
 ::ffff:10.0.147.39 - - [25/Dec/2024:08:36:54 +0000] "GET /v1/api/users/676acd05ddd7364ca532dd98 HTTP/1.1" 200 340 "-" "okhttp/4.9.2"
+::1 - - [05/Mar/2025:06:34:57 +0000] "GET / HTTP/1.1" 404 32 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0"
+::1 - - [05/Mar/2025:06:34:57 +0000] "GET /favicon.ico HTTP/1.1" 404 32 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0"
+::1 - - [05/Mar/2025:06:35:00 +0000] "GET /hello HTTP/1.1" 200 5 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0"

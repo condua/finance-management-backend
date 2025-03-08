@@ -26,9 +26,10 @@ require("./dbs/init.mongodb");
 
 // init routes
 app.use("", require("./routes"));
-app.use("/hello", (req, res) => {
+app.get("/hello", (req, res) => {
   res.send("Hello");
 });
+
 // handling error
 app.use((req, res, next) => {
   const error = new Error("Not found");
